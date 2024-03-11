@@ -1,7 +1,7 @@
 // colors.ts
 export const colors = {
   primary: '#bbe329',
-  secondary: '#f5f5f5',
+  secondary: '#333333',
   success: '#28a745',
   danger: '#dc3545',
   warning: '#ffc107',

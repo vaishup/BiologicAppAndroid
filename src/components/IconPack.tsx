@@ -1,4 +1,8 @@
-import {ChevronLeft, CircleUserRound} from 'lucide-react-native';
+import {
+  ChevronLeft,
+  CircleUserRound,
+  LayoutDashboard,
+} from 'lucide-react-native';
 import {colors} from '../styles/colors';
 
 interface IconProps {
@@ -19,6 +23,12 @@ const Icon = (props: IconProps) => {
     backArrow: (
       <ChevronLeft
         color={props.color ?? colors.primary}
+        size={props.size ?? size_sm}
+      />
+    ),
+    drawer: (
+      <LayoutDashboard
+        color={props.color ?? colors.secondary}
         size={props.size ?? size_sm}
       />
     ),
