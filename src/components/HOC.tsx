@@ -17,8 +17,8 @@ const HOC = (WrappedComponent: React.ComponentType) => {
       <>
         {ios ? (
           <>
-            <SafeAreaView style={{flex: 0, backgroundColor: '#325FD5'}} />
-            <SafeAreaView style={{flex: 1, backgroundColor: '#f1f1f1'}}>
+            <SafeAreaView style={{flex: 0, backgroundColor: '#f5f5f5'}} />
+            <SafeAreaView style={{flex: 1, backgroundColor: '#f5f5f5'}}>
               <ScrollView bounces={false}>
                 <WrappedComponent {...props} />
               </ScrollView>
