@@ -12,12 +12,14 @@ import ChangePassword from '../screens/ChangePassword';
 import HelpCenter from '../screens/HelpCenter';
 import PrivacyPolicy from '../screens/PrivacyPolicy';
 import Profile from '../screens/Profile';
+import {colors} from '../styles/colors';
+import Icon from '../components/IconPack';
 
 export type NavigationParams = {
   Home: undefined;
 };
 
-const Stack = createNativeStackNavigator<NavigationParams>();
+const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -25,15 +27,58 @@ const Root = () => {
   return (
     <NavigationContainer>
       <Drawer.Navigator
-        screenOptions={{headerShown: false}}
+        screenOptions={{
+          headerShown: false,
+          drawerStyle: {
+            backgroundColor: colors.primary,
+            borderTopRightRadius: 10,
+            borderBottomRightRadius: 10,
+          },
+        }}
         drawerContent={DrawerContent}
         initialRouteName="Home">
-        <Drawer.Screen name="Home" component={HomeStack} />
+        <Drawer.Screen
+          name="Home"
+          component={HomeStack}
+          options={{
+            drawerLabel: 'Home',
+            drawerIcon: () => <Icon type={'user'} />,
+          }}
+        />
         {/* <Drawer.Screen name="Profile" component={HOC(Profile)} /> */}
-        <Drawer.Screen name="About Us" component={HOC(AboutUs)} />
-        <Drawer.Screen name="Change Password" component={HOC(ChangePassword)} />
-        <Drawer.Screen name="Help Center" component={HOC(HelpCenter)} />
-        <Drawer.Screen name="Privacy Policy" component={HOC(PrivacyPolicy)} />
+
+        <Drawer.Screen
+          name="ChangePassword"
+          component={HOC(ChangePassword)}
+          options={{
+            drawerLabel: 'Change Password',
+            drawerIcon: () => <Icon type={'user'} />,
+          }}
+        />
+        <Drawer.Screen
+          name="HelpCenter"
+          component={HOC(HelpCenter)}
+          options={{
+            drawerLabel: 'Help Center',
+            drawerIcon: () => <Icon type={'user'} />,
+          }}
+        />
+        <Drawer.Screen
+          name="AboutUs"
+          component={HOC(AboutUs)}
+          options={{
+            drawerLabel: 'About Us',
+            drawerIcon: () => <Icon type={'user'} />,
+          }}
+        />
+        <Drawer.Screen
+          name="PrivacyPolicy"
+          component={HOC(PrivacyPolicy)}
+          options={{
+            drawerLabel: 'Privacy & Policy',
+            drawerIcon: () => <Icon type={'user'} />,
+          }}
+        />
       </Drawer.Navigator>
     </NavigationContainer>
   );
