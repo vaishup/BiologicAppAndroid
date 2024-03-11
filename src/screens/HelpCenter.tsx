@@ -1,10 +1,21 @@
 import {View} from '@gluestack-ui/themed';
 import Header from '../components/Header';
 
-const HelpCenter = () => {
+interface Props {
+  navigation: any;
+}
+
+const HelpCenter: React.FC<Props> = ({navigation}) => {
   return (
     <View>
-      <Header title="Help Center" />
+      <Header
+        title="Help Center"
+        leftBtn="drawer"
+        leftAction={() => {
+          console.log('left');
+          navigation.openDrawer();
+        }}
+      />
     </View>
   );
 };

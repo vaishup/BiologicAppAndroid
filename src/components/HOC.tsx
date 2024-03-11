@@ -1,8 +1,12 @@
 import {ScrollView, StatusBar, View} from '@gluestack-ui/themed';
 import React from 'react';
 import {Platform, SafeAreaView} from 'react-native';
-import {Dimensions} from 'react-native';
-const HOC = (WrappedComponent: React.ComponentType) => {
+
+interface Props {
+  navigation: any; // Adjust the type if possible
+}
+
+const HOC = <P extends Props>(WrappedComponent: React.ComponentType<P>) => {
   //this is the higher order component
   //this wraps each screen, and saves you from repeating yourself
   //changes here will mean you have to restart ur server *sometimes*

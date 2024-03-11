@@ -1,4 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
+import {TouchableOpacity} from 'react-native';
 import {Button, Image, Text, HStack} from '@gluestack-ui/themed';
 import Icon from './IconPack';
 
@@ -25,9 +26,8 @@ const Header: React.FC<HeaderProps> = ({
   const h = height ?? 60;
   return (
     <HStack h={h} p={20} alignItems="center" justifyContent="space-between">
-      <Button
-        size="lg"
-        variant="link"
+      <TouchableOpacity
+        style={{width: 30}}
         onPress={
           leftAction
             ? leftAction
@@ -36,8 +36,8 @@ const Header: React.FC<HeaderProps> = ({
               }
         }>
         <Icon type={leftBtn ? leftBtn : 'backArrow'} />
-      </Button>
-      {title && <Text>{title}</Text>}
+      </TouchableOpacity>
+      {title && <Text alignSelf="center">{title}</Text>}
       {isShowLogo && (
         <Image
           height={h - 15}
@@ -45,13 +45,10 @@ const Header: React.FC<HeaderProps> = ({
           source={require('../assets/logo.png')}
         />
       )}
-      {rightBtn ? (
-        <Button size="lg" variant="link" onPress={rightAction}>
-          <Icon type={rightBtn} />
-        </Button>
-      ) : (
-        <></>
-      )}
+
+      <TouchableOpacity style={{width: 30}} onPress={rightAction}>
+        {rightBtn && <Icon type={rightBtn} />}
+      </TouchableOpacity>
     </HStack>
   );
 };

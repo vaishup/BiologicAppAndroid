@@ -1,10 +1,21 @@
 import {View} from '@gluestack-ui/themed';
 import Header from '../components/Header';
 
-const PrivacyPolicy = () => {
+interface Props {
+  navigation: any;
+}
+
+const PrivacyPolicy: React.FC<Props> = ({navigation}) => {
   return (
     <View>
-      <Header title="Privacy & Policy" />
+      <Header
+        title="Privacy & Policy"
+        leftBtn="drawer"
+        leftAction={() => {
+          console.log('left');
+          navigation.openDrawer();
+        }}
+      />
     </View>
   );
 };

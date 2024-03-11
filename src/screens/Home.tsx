@@ -1,18 +1,22 @@
 import {View, Text} from '@gluestack-ui/themed';
 import Header from '../components/Header';
 
-const Home = () => {
+interface Props {
+  navigation: any;
+}
+
+const Home: React.FC<Props> = ({navigation}) => {
   return (
     <View>
       <Header
         isShowLogo
         leftBtn="drawer"
         leftAction={() => {
-          console.log('left');
+          navigation.openDrawer();
         }}
         rightBtn="user"
         rightAction={() => {
-          console.log('right');
+          navigation.navigate('Profile');
         }}
       />
       <Text>Home Page</Text>
