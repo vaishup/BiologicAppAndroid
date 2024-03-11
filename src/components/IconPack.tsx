@@ -22,7 +22,7 @@ const Icon = (props: IconProps) => {
   let icons: Dictionary<any> = {
     backArrow: (
       <ChevronLeft
-        color={props.color ?? colors.primary}
+        color={props.color ?? colors.secondary}
         size={props.size ?? size_sm}
       />
     ),
