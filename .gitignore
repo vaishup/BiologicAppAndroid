@@ -64,3 +64,6 @@ yarn-error.log
 
 # testing
 /coverage
+/ios/SalaneCanada.xcworkspace
+Podfile.lock
+yarn.lock
