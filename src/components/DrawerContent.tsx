@@ -1,20 +1,18 @@
-import React from 'react';
-import {
-  DrawerContentComponentProps,
-  DrawerContentScrollView,
-  DrawerItemList,
-  DrawerItem,
-} from '@react-navigation/drawer';
-import {
-  useNavigationState,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
-import {TouchableOpacity, StyleSheet} from 'react-native';
-import {HStack, Text, View} from '@gluestack-ui/themed';
+import React, {useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import {Dimensions, TouchableOpacity, StyleSheet} from 'react-native';
+import {Box, HStack, Image, Text, VStack} from '@gluestack-ui/themed';
 
 import Icon from './IconPack';
 import {colors} from '../styles/colors';
+
+const {width, height} = Dimensions.get('window');
+const defaultImg = require('../assets/placeholders.png');
+
+const dummyData = {
+  username: 'Sherman',
+  email: 'sherman@gmail.com',
+};
 
 interface DrawerItemData {
   label: string;
@@ -23,58 +21,74 @@ interface DrawerItemData {
 }
 
 const drawerItems: DrawerItemData[] = [
-  {label: 'Home', icon: 'user', screen: 'Home'},
-  // {label: 'Saved Recipients', icon: 'user', screen: 'Home'},
-  {label: 'Change Password', icon: 'user', screen: 'ChangePassword'},
-  {label: 'Help Center', icon: 'user', screen: 'HelpCenter'},
-  {label: 'About Us', icon: 'user', screen: 'AboutUs'},
-  {label: 'Privacy & Policy', icon: 'user', screen: 'PrivacyPolicy'},
+  {label: 'Saved Recipients', icon: 'users', screen: 'SavedRecipients'},
+  {label: 'Change Password', icon: 'key', screen: 'ChangePassword'},
+  {label: 'Help Center', icon: 'help', screen: 'HelpCenter'},
+  {label: 'About Us', icon: 'info', screen: 'AboutUs'},
+  {label: 'Privacy & Policy', icon: 'alert', screen: 'PrivacyPolicy'},
 ];
 
 const DrawerContent = (props: any) => {
   const navigation = useNavigation();
-  const navigationState = useNavigationState(state => state);
-  const isFocused = useIsFocused();
+  const [user, setUser] = useState(dummyData);
 
   return (
-    // <View
-    //   height="$full"
-    //   backgroundColor={colors.primary}
-    //   padding={20}
-    //   borderTopRightRadius={30}
-    //   borderBottomRightRadius={30}>
-    <DrawerContentScrollView {...props}>
-      <DrawerItemList {...props} />
-      {/* {drawerItems.map((item, index) => (
-        <DrawerItem
+    <VStack
+      space="lg"
+      padding={20}
+      height="$full"
+      backgroundColor={colors.primary}>
+      <VStack alignItems="center">
+        <Box style={styles.icon_container}>
+          <Image alt="user icon" source={defaultImg} style={styles.icon} />
+        </Box>
+
+        <Text mt={8} color="white" size="2xl" fontWeight="$bold">
+          {user.username}
+        </Text>
+        <Text color="white" size="sm">
+          {user.email}
+        </Text>
+      </VStack>
+
+      {drawerItems.map((item, index) => (
+        <TouchableOpacity
           key={index}
-          label={item.label}
-          icon={() => <Icon type={item.icon} />} // Add your icon component here
-          // focused={
-          //   navigationState?.routes[navigationState?.index]?.name ===
-          //   item.screen
-          // }
           onPress={() => {
             navigation.navigate(item.screen);
-          }}
-        />
-      ))} */}
-    </DrawerContentScrollView>
+          }}>
+          <HStack height="auto" space="md" alignItems="center">
+            <Icon type={item.icon} size={25} />
+            <Text color="white">{item.label}</Text>
+          </HStack>
+        </TouchableOpacity>
+      ))}
 
-    // </View>
+      <TouchableOpacity onPress={() => console.log('Sign Out')}>
+        <HStack height="auto" space="md" alignItems="center">
+          <Icon type={'signOut'} size={25} />
+          <Text color="white">Sign Out</Text>
+        </HStack>
+      </TouchableOpacity>
+    </VStack>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingVertical: 20,
-    paddingHorizontal: 10,
+  icon: {
+    width: width / 4,
+    height: width / 4,
+    borderRadius: width,
   },
-  item: {
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+  icon_container: {
+    width: width / 3.5,
+    height: width / 3.5,
+    borderRadius: width,
+    backgroundColor: 'rgba(255,255,255,0.8)',
+    borderWidth: 10,
+    borderColor: 'rgba(255,255,255,0.3)',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

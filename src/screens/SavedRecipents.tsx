@@ -1,12 +1,12 @@
 import {View} from '@gluestack-ui/themed';
 import Header from '../components/Header';
 
-const AboutUs = () => {
+const SavedRecipients = () => {
   return (
     <View>
-      <Header title="About Us" />
+      <Header title="Saved Recipients" />
     </View>
   );
 };
 
-export default AboutUs;
+export default SavedRecipients;
