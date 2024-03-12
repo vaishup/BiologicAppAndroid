@@ -9,6 +9,7 @@ import {
   LogOut,
   Send,
   ShieldAlert,
+  UserRound,
   UsersRound,
   WalletMinimal,
 } from 'lucide-react-native';
@@ -57,6 +58,12 @@ const Icon = (props: IconProps) => {
     // -------------------------------- Drawer ---------------------------------
     drawer: (
       <LayoutDashboard
+        color={props.color ?? colors.secondary}
+        size={props.size ?? size_sm}
+      />
+    ),
+    userPic: (
+      <UserRound
         color={props.color ?? colors.secondary}
         size={props.size ?? size_sm}
       />
