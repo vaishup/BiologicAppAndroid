@@ -1,20 +1,10 @@
 import {View} from '@gluestack-ui/themed';
 import Header from '../components/Header';
 
-interface Props {
-  navigation: any;
-}
-
-const Profile: React.FC<Props> = ({navigation}) => {
+const Profile = () => {
   return (
     <View>
-      <Header
-        title="Profile"
-        // leftBtn="drawer"
-        // leftAction={() => {
-        //   navigation.openDrawer();
-        // }}
-      />
+      <Header title="Profile" />
     </View>
   );
 };
