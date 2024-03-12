@@ -1,7 +1,7 @@
 import {Text, View} from '@gluestack-ui/themed';
 import Header from '../components/Header';
 
-const Home = ({navigation}: {navigation: any}) => {
+const TransactionHistory = ({navigation}: {navigation: any}) => {
   return (
     <View>
       <Header
@@ -15,9 +15,9 @@ const Home = ({navigation}: {navigation: any}) => {
           navigation.navigate('Profile');
         }}
       />
-      <Text>Home Page</Text>
+      <Text>Transactions</Text>
     </View>
   );
 };
 
-export default Home;
+export default TransactionHistory;

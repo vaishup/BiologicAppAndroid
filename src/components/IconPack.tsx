@@ -1,4 +1,5 @@
 import {
+  Bell,
   ChevronLeft,
   CircleHelp,
   CircleUserRound,
@@ -6,8 +7,10 @@ import {
   Info,
   LayoutDashboard,
   LogOut,
+  Send,
   ShieldAlert,
   UsersRound,
+  WalletMinimal,
 } from 'lucide-react-native';
 import {colors} from '../styles/colors';
 
@@ -31,14 +34,29 @@ const Icon = (props: IconProps) => {
         size={props.size ?? size_sm}
       />
     ),
-    drawer: (
-      <LayoutDashboard
+    user: (
+      <CircleUserRound
         color={props.color ?? colors.secondary}
         size={props.size ?? size_sm}
       />
     ),
-    user: (
-      <CircleUserRound
+    // -------------------------------- NavBar ---------------------------------
+    transaction: (
+      <WalletMinimal
+        color={props.color ?? colors.secondary}
+        size={props.size ?? size_sm}
+      />
+    ),
+    send: <Send color={props.color ?? 'white'} size={props.size ?? size_sm} />,
+    noti: (
+      <Bell
+        color={props.color ?? colors.secondary}
+        size={props.size ?? size_sm}
+      />
+    ),
+    // -------------------------------- Drawer ---------------------------------
+    drawer: (
+      <LayoutDashboard
         color={props.color ?? colors.secondary}
         size={props.size ?? size_sm}
       />

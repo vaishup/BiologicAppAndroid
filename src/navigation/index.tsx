@@ -3,16 +3,20 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import HOC from '../components/HOC';
 import DrawerContent from '../components/DrawerContent';
-import Home from '../screens/Home';
+import TabBar from '../components/TabBar';
+import HOC from '../components/HOC';
 
+import Home from '../screens/Home';
+import TransactionHistory from '../screens/TransactionHistory';
+import Notification from '../screens/Notification';
+
+import Profile from '../screens/Profile';
 import SavedRecipients from '../screens/SavedRecipents';
-import AboutUs from '../screens/AboutUs';
 import ChangePassword from '../screens/ChangePassword';
 import HelpCenter from '../screens/HelpCenter';
+import AboutUs from '../screens/AboutUs';
 import PrivacyPolicy from '../screens/PrivacyPolicy';
-import Profile from '../screens/Profile';
 
 export type NavigationParams = {
   Home: undefined;
@@ -29,13 +33,12 @@ const Root = () => {
         screenOptions={{
           headerShown: false,
           drawerStyle: {
-            borderTopRightRadius: 10,
-            borderBottomRightRadius: 10,
+            borderTopRightRadius: 15,
           },
         }}
         drawerContent={DrawerContent}
         initialRouteName="Home">
-        <Drawer.Screen name="Home" component={HomeStack} />
+        <Drawer.Screen name="Home" component={TabNavigator} />
         {/* <Drawer.Screen name="Profile" component={HOC(Profile)} /> */}
         <Drawer.Screen
           name="SavedRecipients"
@@ -50,10 +53,32 @@ const Root = () => {
   );
 };
 
+const TabNavigator = () => {
+  return (
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: {
+          borderTopLeftRadius: 16,
+          borderTopRightRadius: 16,
+        },
+      }}
+      tabBar={props => <TabBar {...props} />}
+      initialRouteName="HomeStack">
+      <Tab.Screen
+        name="TransactionHistory"
+        component={HOC(TransactionHistory)}
+      />
+      <Tab.Screen name="HomeStack" component={HomeStack} />
+      <Tab.Screen name="Notification" component={HOC(Notification)} />
+    </Tab.Navigator>
+  );
+};
+
 const HomeStack = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Home" component={HOC(Home)} />
+      <Stack.Screen name="HomePage" component={HOC(Home)} />
       <Stack.Screen name="Profile" component={HOC(Profile)} />
     </Stack.Navigator>
   );
