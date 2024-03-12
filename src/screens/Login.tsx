@@ -1,0 +1,193 @@
+import React, {useState} from 'react';
+
+import {
+  View,
+  Text as TextView,
+  Image as ImageView,
+  Dimensions,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
+import Icon from '../components/icon/IconPack';
+import {AlertCircle} from 'lucide-react-native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+
+import {
+  Checkbox,
+  CheckboxIndicator,
+  CheckboxIcon,
+  CheckboxLabel,
+  Button,
+  Text,
+  Box,
+  Image,
+  VStack,
+  Input,
+  InputField,
+  InputSlot,
+  HStack,
+  ScrollView,
+  Modal,
+  ModalBackdrop,
+  KeyboardAvoidingView,
+  Spinner,
+  InputIcon,
+} from '@gluestack-ui/themed';
+import {SafeAreaView} from 'react-native-safe-area-context';
+
+const {width, height} = Dimensions.get('window');
+
+const Login = () => {
+  const initialValues = {email: '', password: ''};
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  //const navigation = useNavigation<ScreenType>();
+
+  const handleSubmit = () => {
+    // Handle signup logic here
+    console.log('Form values:');
+  };
+  const handleState = () => {
+    setShowPassword(showState => {
+      return !showState;
+    });
+  };
+
+  return (
+    <KeyboardAwareScrollView
+      style={{flex: 1}}
+      contentContainerStyle={{flexGrow: 1}}
+      keyboardShouldPersistTaps="handled">
+      <SafeAreaView style={{flex: 1}} forceInset={{top: 'never'}}>
+        <Box>
+          <ImageView
+            alt="Logo Styles"
+            source={require('../assets/logo.png')}
+            style={styles.imageStyle}
+          />
+          <VStack space={'xl'} p={30}>
+            <Box style={[styles.container]}>
+              <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
+                {'Name'}
+              </Text>
+              <Input style={{borderRadius: 10, height: 45}}>
+                <InputField />
+                <InputSlot pr="$3">
+                  <Icon type="user" color={'#C9C9C9'} />
+                </InputSlot>
+              </Input>
+            </Box>
+            <Box style={[styles.container]}>
+              <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
+                {'Password'}
+              </Text>
+              <Input style={{borderRadius: 10, height: 45}}>
+                <InputField type={showPassword ? 'text' : 'password'} />
+                <InputSlot pr="$3" onPress={handleState}>
+                  <Icon
+                    type={showPassword ? 'eye' : 'eyeOff'}
+                    color={'#C9C9C9'}
+                  />
+                </InputSlot>
+              </Input>
+            </Box>
+          </VStack>
+          <Box style={styles.container}>
+            <VStack p={10}>
+              <TouchableOpacity>
+                <Text style={styles.forgotPassword}>Forgot Password?</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                disabled={isLoading}
+                style={styles.loginButton}
+                onPress={handleSubmit}>
+                {isLoading ? (
+                  <Spinner size="small" />
+                ) : (
+                  <Text style={styles.btnText}>Login</Text>
+                )}
+              </TouchableOpacity>
+            </VStack>
+            <Box style={styles.signupContainer}>
+              <TouchableOpacity>
+                <Text
+                  style={styles.signupText}>
+                  Don't have an account?{' '}
+                  <Text style={styles.boldText}>Signup</Text>
+                </Text>
+              </TouchableOpacity>
+            </Box>
+          </Box>
+        </Box>
+      </SafeAreaView>
+    </KeyboardAwareScrollView>
+  );
+};
+const styles = StyleSheet.create({
+  imageStyle: {
+    height: height / 4.9,
+    // PixelRatio.getPixelSizeForLayoutSize(110)
+    width: '90%',
+    justifyContent: 'center',
+    alignSelf: 'center', // top: 25,
+    resizeMode: 'contain',
+  },
+
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+  },
+  btnText: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: 'normal',
+    letterSpacing: 0.25,
+    color: '#F1F1F1',
+  },
+  loginButton: {
+    borderRadius: 15,
+    backgroundColor: '#005DAA',
+    width: '100%',
+    minHeight: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  forgotPassword: {
+    color: '#005DAA',
+    padding: 5,
+    justifyContent: 'flex-end',
+    alignSelf: 'flex-end',
+  },
+  signupText: {
+    color: 'black',
+  },
+  boldText: {
+    fontWeight: 'bold',
+  },
+
+  signupContainer: {
+    justifyContent: 'flex-end',
+    alignSelf: 'center',
+    minHeight: 50,
+    maxHeight: 100,
+    paddingHorizontal: 20,
+  },
+  input: {
+    position: 'absolute',
+    width: 344,
+    height: 50,
+    borderRadius: 20,
+    borderWidth: 0,
+    fontSize: 16,
+    color: '#3948AA',
+    borderColor: '#F0F0F0',
+    backgroundColor: '#F0F0F0',
+    paddingHorizontal: 8,
+  },
+});
+
+export default Login;
