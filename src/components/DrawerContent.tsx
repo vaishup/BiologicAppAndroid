@@ -1,7 +1,14 @@
 import React, {useState} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {Dimensions, TouchableOpacity, StyleSheet} from 'react-native';
-import {Box, HStack, Image, Text, VStack} from '@gluestack-ui/themed';
+import {
+  Box,
+  HStack,
+  Image,
+  SafeAreaView,
+  Text,
+  VStack,
+} from '@gluestack-ui/themed';
 
 import Icon from './IconPack';
 import {colors} from '../styles/colors';
@@ -28,49 +35,46 @@ const drawerItems: DrawerItemData[] = [
   {label: 'Privacy & Policy', icon: 'alert', screen: 'PrivacyPolicy'},
 ];
 
-const DrawerContent = (props: any) => {
-  const navigation = useNavigation();
+const DrawerContent = ({navigation}: {navigation: any}) => {
   const [user, setUser] = useState(dummyData);
 
   return (
-    <VStack
-      space="lg"
-      padding={20}
-      height="$full"
-      backgroundColor={colors.primary}>
-      <VStack alignItems="center">
-        <Box style={styles.icon_container}>
-          <Image alt="user icon" source={defaultImg} style={styles.icon} />
-        </Box>
+    <SafeAreaView backgroundColor={colors.primary}>
+      <VStack space="xl" padding={20} height="$full">
+        <VStack mb={15} alignItems="center">
+          <Box style={styles.icon_container}>
+            <Image alt="user icon" source={defaultImg} style={styles.icon} />
+          </Box>
 
-        <Text mt={8} color="white" size="2xl" fontWeight="$bold">
-          {user.username}
-        </Text>
-        <Text color="white" size="sm">
-          {user.email}
-        </Text>
-      </VStack>
+          <Text mt={8} color="white" size="2xl" fontWeight="$bold">
+            {user.username}
+          </Text>
+          <Text color="white" size="sm">
+            {user.email}
+          </Text>
+        </VStack>
 
-      {drawerItems.map((item, index) => (
-        <TouchableOpacity
-          key={index}
-          onPress={() => {
-            navigation.navigate(item.screen);
-          }}>
+        {drawerItems.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            onPress={() => {
+              navigation.navigate(item.screen);
+            }}>
+            <HStack height="auto" space="md" alignItems="center">
+              <Icon type={item.icon} size={25} />
+              <Text color="white">{item.label}</Text>
+            </HStack>
+          </TouchableOpacity>
+        ))}
+
+        <TouchableOpacity onPress={() => console.log('Sign Out')}>
           <HStack height="auto" space="md" alignItems="center">
-            <Icon type={item.icon} size={25} />
-            <Text color="white">{item.label}</Text>
+            <Icon type={'signOut'} size={25} />
+            <Text color="white">Sign Out</Text>
           </HStack>
         </TouchableOpacity>
-      ))}
-
-      <TouchableOpacity onPress={() => console.log('Sign Out')}>
-        <HStack height="auto" space="md" alignItems="center">
-          <Icon type={'signOut'} size={25} />
-          <Text color="white">Sign Out</Text>
-        </HStack>
-      </TouchableOpacity>
-    </VStack>
+      </VStack>
+    </SafeAreaView>
   );
 };
 

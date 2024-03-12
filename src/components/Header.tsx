@@ -40,6 +40,7 @@ const Header: React.FC<HeaderProps> = ({
       {title && <Text alignSelf="center">{title}</Text>}
       {isShowLogo && (
         <Image
+          alt="Salane logo"
           height={h - 15}
           resizeMode="contain"
           source={require('../assets/logo.png')}
