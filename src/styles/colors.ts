@@ -8,6 +8,6 @@ export const colors = {
   info: '#17a2b8',
   light: '#f8f9fa',
   dark: '#343a40',
-  gray: "#333333"
+  daryGray: "#333333"
   // Add more colors as needed
 };
