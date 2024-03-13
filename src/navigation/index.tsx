@@ -17,6 +17,7 @@ import ChangePassword from '../screens/ChangePassword';
 import HelpCenter from '../screens/HelpCenter';
 import AboutUs from '../screens/AboutUs';
 import PrivacyPolicy from '../screens/PrivacyPolicy';
+import Welcome from '../screens/Welcome';
 
 export type NavigationParams = {
   Home: undefined;
@@ -37,7 +38,8 @@ const Root = () => {
           },
         }}
         drawerContent={DrawerContent}
-        initialRouteName="Home">
+        initialRouteName="Welcome">
+        <Drawer.Screen name="Welcome" component={HOC(Welcome)} />
         <Drawer.Screen name="Home" component={TabNavigator} />
         {/* <Drawer.Screen name="Profile" component={HOC(Profile)} /> */}
         <Drawer.Screen
@@ -69,6 +71,7 @@ const TabNavigator = () => {
         name="TransactionHistory"
         component={HOC(TransactionHistory)}
       />
+
       <Tab.Screen name="HomeStack" component={HomeStack} />
       <Tab.Screen name="Notification" component={HOC(Notification)} />
     </Tab.Navigator>
