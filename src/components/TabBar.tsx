@@ -22,7 +22,11 @@ const TabBar = ({navigation}: {navigation: any}) => {
           <Icon type={'transaction'} />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.sendBtn}>
+        <TouchableOpacity
+          style={styles.sendBtn}
+          onPress={() => {
+            navigation.navigate('HomePage');
+          }}>
           <View mr={3}>
             <Icon type={'send'} size={32} />
           </View>

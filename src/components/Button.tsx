@@ -1,4 +1,5 @@
 import {
+  DimensionValue,
   Dimensions,
   Text,
   TouchableOpacity,
@@ -9,9 +10,10 @@ import {colors} from '../styles/colors';
 
 const {width} = Dimensions.get('window');
 const windowWidth = width;
+
 interface CustomButtonProps {
-  width?: number;
-  height?: number;
+  width?: DimensionValue;
+  height?: DimensionValue;
   text?: string;
   backgroundColor?: string;
   style?: ViewStyle;
@@ -51,7 +53,8 @@ const CustomButton = ({
         <Text
           style={{
             color: textColor !== undefined ? textColor : 'white',
-            fontWeight: 'bold',
+            fontWeight: '600',
+            fontSize: 16,
           }}>
           {text !== undefined ? text : 'Button'}
         </Text>

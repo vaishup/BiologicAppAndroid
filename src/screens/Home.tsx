@@ -1,5 +1,6 @@
 import {Text, View} from '@gluestack-ui/themed';
 import Header from '../components/Header';
+import Calculator from '../components/Calculator';
 
 const Home = ({navigation}: {navigation: any}) => {
   return (
@@ -15,7 +16,13 @@ const Home = ({navigation}: {navigation: any}) => {
           navigation.navigate('Profile');
         }}
       />
-      <Text>Home Page</Text>
+      <View padding={20}>
+        <Calculator
+          onPress={() => {
+            console.log('From Home Page');
+          }}
+        />
+      </View>
     </View>
   );
 };

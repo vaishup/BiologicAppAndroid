@@ -1,4 +1,5 @@
 import {
+  BadgeDollarSign,
   Bell,
   ChevronLeft,
   CircleHelp,
@@ -9,6 +10,7 @@ import {
   LogOut,
   Send,
   ShieldAlert,
+  UserRound,
   UsersRound,
   WalletMinimal,
 } from 'lucide-react-native';
@@ -61,6 +63,12 @@ const Icon = (props: IconProps) => {
         size={props.size ?? size_sm}
       />
     ),
+    userPic: (
+      <UserRound
+        color={props.color ?? colors.secondary}
+        size={props.size ?? size_sm}
+      />
+    ),
     users: (
       <UsersRound color={props.color ?? 'white'} size={props.size ?? size_sm} />
     ),
@@ -79,6 +87,13 @@ const Icon = (props: IconProps) => {
     ),
     signOut: (
       <LogOut color={props.color ?? 'white'} size={props.size ?? size_sm} />
+    ),
+    //
+    dollarSign: (
+      <BadgeDollarSign
+        color={props.color ?? 'grey'}
+        size={props.size ?? size_sm}
+      />
     ),
   };
 
