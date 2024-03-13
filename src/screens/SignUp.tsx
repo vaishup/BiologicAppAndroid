@@ -269,7 +269,7 @@ const SignUp = () => {
                       {touched.email && errors.email ? (
                         <AlertCircle color={'red'} size={27} />
                       ) : (
-                        <Icon color={'#C9C9C9'} size={27} type={'user'} />
+                        <Icon color={'#C9C9C9'} size={27} type={'mail'} />
                       )}
                     </InputSlot>
                   </Input>

@@ -25,7 +25,7 @@ const Header: React.FC<HeaderProps> = ({
   const navigation = useNavigation();
   const h = height ?? 60;
   return (
-    <HStack h={h} p={20} alignItems="center" justifyContent="space-between">
+    <HStack h={h} px={20} alignItems="center" justifyContent="space-between">
       <TouchableOpacity
         style={{width: 30}}
         onPress={
@@ -35,11 +35,16 @@ const Header: React.FC<HeaderProps> = ({
                 navigation.goBack();
               }
         }>
-        <Icon type={leftBtn ? leftBtn : 'backArrow'} />
+        <Icon type={leftBtn ? leftBtn : 'backArrow'} size={30} />
       </TouchableOpacity>
-      {title && <Text alignSelf="center">{title}</Text>}
+      {title && (
+        <Text alignSelf="center" fontWeight="$semibold" size="lg">
+          {title}
+        </Text>
+      )}
       {isShowLogo && (
         <Image
+          alt="Salane logo"
           height={h - 15}
           resizeMode="contain"
           source={require('../assets/logo.png')}
@@ -47,7 +52,7 @@ const Header: React.FC<HeaderProps> = ({
       )}
 
       <TouchableOpacity style={{width: 30}} onPress={rightAction}>
-        {rightBtn && <Icon type={rightBtn} />}
+        {rightBtn && <Icon type={rightBtn} size={30} />}
       </TouchableOpacity>
     </HStack>
   );
