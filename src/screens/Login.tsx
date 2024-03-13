@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import Icon from '../components/icon/IconPack';
+import Icon from '../components/IconPack';
 import {AlertCircle} from 'lucide-react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Formik} from 'formik';

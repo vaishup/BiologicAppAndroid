@@ -13,6 +13,14 @@ import {
   UserRound,
   UsersRound,
   WalletMinimal,
+  User2,
+  Mail,
+  Lock,
+  Phone,
+  Smartphone,
+  Eye,
+  EyeOff,
+  ChevronDown,
 } from 'lucide-react-native';
 import {colors} from '../styles/colors';
 
@@ -93,6 +101,49 @@ const Icon = (props: IconProps) => {
       <BadgeDollarSign
         color={props.color ?? 'grey'}
         size={props.size ?? size_sm}
+      />
+    ),
+    // by vaishali 
+    userIcon: (
+      <User2
+        color={props.color !== undefined ? props.color : '#C9C9C9'}
+        size={props.size !== undefined ? props.size : 27}
+      />
+    ),
+    mail: (
+      <Mail
+        color={props.color !== undefined ? props.color : '#C9C9C9'}
+        size={props.size !== undefined ? props.size : 27}
+      />
+    ),
+    lock: (
+      <Lock
+        color={props.color !== undefined ? props.color : '#C9C9C9'}
+        size={props.size !== undefined ? props.size : 27}
+      />
+    ),
+    phone: (
+      <Smartphone
+        color={props.color !== undefined ? props.color : '#C9C9C9'}
+        size={props.size !== undefined ? props.size : 27}
+      />
+    ),
+    eye: (
+      <Eye
+        color={props.color !== undefined ? props.color : '#C9C9C9'}
+        size={props.size !== undefined ? props.size : 27}
+      />
+    ),
+    eyeOff: (
+      <EyeOff
+        color={props.color !== undefined ? props.color : '#C9C9C9'}
+        size={props.size !== undefined ? props.size : 27}
+      />
+    ),
+    arrowDown: (
+      <ChevronDown
+        color={props.color !== undefined ? props.color : '#3948AA'}
+        size={props.size !== undefined ? props.size : 27}
       />
     ),
   };

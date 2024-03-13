@@ -10,10 +10,9 @@ import {
   Platform,
   
 } from 'react-native';
-import Icon from '../components/icon/IconPack';
+import Icon from '../components/IconPack';
 import {AlertCircle} from 'lucide-react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
-
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
 import {

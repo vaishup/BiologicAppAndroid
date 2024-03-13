@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-import Icon from '../components/icon/IconPack';
+import Icon from '../components/IconPack';
 import {Mail, Check, AlertCircle, Lock, User2} from 'lucide-react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import * as Yup from 'yup';
