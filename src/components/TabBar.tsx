@@ -7,7 +7,12 @@ import {colors} from '../styles/colors';
 
 const {width, height} = Dimensions.get('window');
 
-const TabBar = ({navigation}: {navigation: any}) => {
+const TabBar = ({navigation, state}: any) => {
+  const getIconColor = (routeName: any) => {
+    const isCurrentRoute = state.routeNames[state.index] === routeName;
+    return isCurrentRoute ? "#006299" : colors.secondary; // Replace 'activeColor' and 'inactiveColor' with your actual colors
+  };
+
   return (
     <SafeAreaView
       backgroundColor="white"
@@ -19,10 +24,17 @@ const TabBar = ({navigation}: {navigation: any}) => {
           onPress={() => {
             navigation.navigate('TransactionHistory');
           }}>
-          <Icon type={'transaction'} />
+          <Icon
+            type={'transaction'}
+            color={getIconColor('TransactionHistory')}
+          />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.sendBtn}>
+        <TouchableOpacity
+          style={styles.sendBtn}
+          onPress={() => {
+            navigation.navigate('HomeStack');
+          }}>
           <View mr={3}>
             <Icon type={'send'} size={32} />
           </View>
@@ -33,7 +45,7 @@ const TabBar = ({navigation}: {navigation: any}) => {
           onPress={() => {
             navigation.navigate('Notification');
           }}>
-          <Icon type={'noti'} />
+          <Icon type={'noti'} color={getIconColor('Notification')} />
         </TouchableOpacity>
       </HStack>
     </SafeAreaView>
@@ -52,9 +64,9 @@ const styles = StyleSheet.create({
     marginTop: -55,
     ...Platform.select({
       ios: {
-        shadowColor: 'rgba(0, 0, 255, 0.3)',
+        shadowColor: '#7AC6F1',
         shadowOffset: {width: 2, height: 2},
-        shadowOpacity: 1,
+        shadowOpacity: 0.5,
         shadowRadius: 2,
       },
       android: {
