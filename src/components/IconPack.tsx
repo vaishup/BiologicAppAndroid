@@ -1,4 +1,5 @@
 import {
+  BadgeDollarSign,
   Bell,
   ChevronLeft,
   CircleHelp,
@@ -86,6 +87,13 @@ const Icon = (props: IconProps) => {
     ),
     signOut: (
       <LogOut color={props.color ?? 'white'} size={props.size ?? size_sm} />
+    ),
+    //
+    dollarSign: (
+      <BadgeDollarSign
+        color={props.color ?? 'grey'}
+        size={props.size ?? size_sm}
+      />
     ),
   };
 
