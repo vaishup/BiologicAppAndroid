@@ -33,7 +33,7 @@ const TabBar = ({navigation, state}: any) => {
         <TouchableOpacity
           style={styles.sendBtn}
           onPress={() => {
-            navigation.navigate('HomeStack');
+            navigation.navigate('HomePage');
           }}>
           <View mr={3}>
             <Icon type={'send'} size={32} />
