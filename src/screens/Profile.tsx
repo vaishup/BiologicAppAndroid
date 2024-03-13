@@ -19,7 +19,7 @@ const dummyUser = {
   bankAccountHolderName: 'Sherman Lai',
 };
 
-interface User {
+export interface User {
   fullname: string;
   email: string;
   phoneNo: string;
@@ -91,7 +91,7 @@ const Profile = () => {
               {user?.interacName}
             </Text>
             <Text size="md" fontWeight="$semibold">
-              {user?.email}
+              {user?.interacEmail}
             </Text>
           </VStack>
         </VStack>

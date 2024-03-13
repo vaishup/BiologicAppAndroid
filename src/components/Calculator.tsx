@@ -43,7 +43,7 @@ const Calculator: React.FC<CalculatorProps> = ({onPress}) => {
   return (
     <VStack backgroundColor="white" borderRadius={10} padding={20}>
       <Text size="sm">You Send Exactly</Text>
-      <Input variant="outline" h={48}>
+      <Input variant="outline" h={48} mt={2}>
         <InputField
           value={AmountTxt_CAD}
           onChangeText={text => {
@@ -83,7 +83,7 @@ const Calculator: React.FC<CalculatorProps> = ({onPress}) => {
         </InputSlot>
       </Input>
 
-      <HStack mt={13} space="xs" alignItems="center">
+      <HStack space="xs" alignItems="center" mt={13}>
         <Icon type={'dollarSign'} size={15} />
         <Text size="sm">1 CAD = {CADCFA} CFA</Text>
       </HStack>
@@ -92,7 +92,7 @@ const Calculator: React.FC<CalculatorProps> = ({onPress}) => {
         Recipient Gets
       </Text>
 
-      <Input variant="outline" mb={30} h={48}>
+      <Input variant="outline" h={48} mb={30} mt={2}>
         <InputField
           value={AmountTxt_CFA}
           onChangeText={text => {
