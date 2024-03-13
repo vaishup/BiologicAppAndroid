@@ -13,6 +13,10 @@ const dummyUser = {
   profileUri: '',
   interacEmail: 'sherman@gmail.com',
   interacName: 'Sherman Lai',
+  bankTransitNumber: '12345',
+  bankInstitutionNumber: '98765',
+  bankAccountNumber: '312382138912398',
+  bankAccountHolderName: 'Sherman Lai',
 };
 
 interface User {
@@ -22,6 +26,10 @@ interface User {
   profileUri: string;
   interacEmail: string;
   interacName: string;
+  bankTransitNumber: string;
+  bankInstitutionNumber: string;
+  bankAccountNumber: string;
+  bankAccountHolderName: string;
 }
 
 const Profile = () => {
@@ -98,7 +106,7 @@ const Profile = () => {
                   Transit Number
                 </Text>
                 <Text size="md" fontWeight="$semibold">
-                  12345
+                  {user?.bankTransitNumber}
                 </Text>
               </VStack>
 
@@ -107,7 +115,7 @@ const Profile = () => {
                   Institution Number
                 </Text>
                 <Text size="md" fontWeight="$semibold">
-                  12345
+                  {user?.bankInstitutionNumber}
                 </Text>
               </VStack>
             </HStack>
@@ -117,7 +125,7 @@ const Profile = () => {
                 Account Number
               </Text>
               <Text size="md" fontWeight="$semibold">
-                12345
+                {user?.bankAccountNumber}
               </Text>
             </VStack>
 
@@ -126,7 +134,7 @@ const Profile = () => {
                 Account Holder Name
               </Text>
               <Text size="md" fontWeight="$semibold">
-                Sherman Lai
+                {user?.bankAccountHolderName}
               </Text>
             </VStack>
           </VStack>
