@@ -30,28 +30,36 @@ const Tab = createBottomTabNavigator();
 const Root = () => {
   return (
     <NavigationContainer>
-      <Drawer.Navigator
+      <Stack.Navigator
         screenOptions={{
           headerShown: false,
-          drawerStyle: {
-            borderTopRightRadius: 15,
-          },
-        }}
-        drawerContent={DrawerContent}
-        initialRouteName="Welcome">
-        <Drawer.Screen name="Welcome" component={HOC(Welcome)} />
-        <Drawer.Screen name="Home" component={TabNavigator} />
-        {/* <Drawer.Screen name="Profile" component={HOC(Profile)} /> */}
-        <Drawer.Screen
-          name="SavedRecipients"
-          component={HOC(SavedRecipients)}
-        />
-        <Drawer.Screen name="ChangePassword" component={HOC(ChangePassword)} />
-        <Drawer.Screen name="HelpCenter" component={HOC(HelpCenter)} />
-        <Drawer.Screen name="AboutUs" component={HOC(AboutUs)} />
-        <Drawer.Screen name="PrivacyPolicy" component={HOC(PrivacyPolicy)} />
-      </Drawer.Navigator>
+        }}>
+        <Stack.Screen name="Welcome" component={HOC(Welcome)} />
+        <Stack.Screen name="DrawNavigator" component={DrawNavigator} />
+      </Stack.Navigator>
     </NavigationContainer>
+  );
+};
+
+const DrawNavigator = () => {
+  return (
+    <Drawer.Navigator
+      screenOptions={{
+        headerShown: false,
+        drawerStyle: {
+          borderTopRightRadius: 15,
+        },
+      }}
+      drawerContent={DrawerContent}
+      initialRouteName="Welcome">
+      <Drawer.Screen name="Home" component={TabNavigator} />
+      {/* <Drawer.Screen name="Profile" component={HOC(Profile)} /> */}
+      <Drawer.Screen name="SavedRecipients" component={HOC(SavedRecipients)} />
+      <Drawer.Screen name="ChangePassword" component={HOC(ChangePassword)} />
+      <Drawer.Screen name="HelpCenter" component={HOC(HelpCenter)} />
+      <Drawer.Screen name="AboutUs" component={HOC(AboutUs)} />
+      <Drawer.Screen name="PrivacyPolicy" component={HOC(PrivacyPolicy)} />
+    </Drawer.Navigator>
   );
 };
 

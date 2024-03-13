@@ -10,10 +10,11 @@ import Slider from '../components/Slider/Slider';
 import CustomButton from '../components/Button';
 import {colors} from '../styles/colors';
 import {Dimensions, TouchableOpacity} from 'react-native';
+import navigation from '../navigation';
 
 const {width, height} = Dimensions.get('window');
 
-const Welcome = () => {
+const Welcome = ({navigation}: {navigation: any}) => {
   return (
     <VStack>
       <VStack>
@@ -30,7 +31,13 @@ const Welcome = () => {
           text="Transfer Calculator"
           textColor={colors.primary}
         />
-        <CustomButton backgroundColor={colors.primary} text="Sign In" />
+        <CustomButton
+          backgroundColor={colors.primary}
+          text="Sign In"
+          action={() => {
+            navigation.navigate('DrawNavigator');
+          }}
+        />
         <HStack justifyContent="center" padding={20}>
           <Text>New user? </Text>
           <TouchableOpacity>

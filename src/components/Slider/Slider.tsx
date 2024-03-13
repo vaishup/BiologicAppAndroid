@@ -10,6 +10,7 @@ import React, {useRef, useState} from 'react';
 import SlideItem from './SlideItem';
 import Pagination from './Pagination';
 import {HStack, VStack} from '@gluestack-ui/themed';
+
 const {width, height} = Dimensions.get('window');
 const Slider = () => {
   const [index, setIndex] = useState(0);
@@ -17,18 +18,21 @@ const Slider = () => {
   const Slides = [
     {
       id: 1,
+      image: require("../../assets/logo.png"),
       title: 'Welcome to Salane',
       description:
         'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
     },
     {
       id: 2,
+      image: "",
       title: 'Welcome to Salane',
       description:
         'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
     },
     {
       id: 3,
+      image: "",
       title: 'Welcome to Salane',
       description:
         'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
