@@ -8,9 +8,13 @@ import {
   Info,
   LayoutDashboard,
   LogOut,
+  Mail,
   Send,
+  Settings,
   ShieldAlert,
+  Smartphone,
   UserRound,
+  UserRoundCog,
   UsersRound,
   WalletMinimal,
 } from 'lucide-react-native';
@@ -30,9 +34,10 @@ const Icon = (props: IconProps) => {
   const size_sm = '27';
 
   let icons: Dictionary<any> = {
+    // -------------------------------- Header ---------------------------------
     backArrow: (
       <ChevronLeft
-        color={props.color ?? colors.secondary}
+        color={props.color ?? colors.primary}
         size={props.size ?? size_sm}
       />
     ),
@@ -88,10 +93,29 @@ const Icon = (props: IconProps) => {
     signOut: (
       <LogOut color={props.color ?? 'white'} size={props.size ?? size_sm} />
     ),
-    //
+    // -------------------------------- Transaction ---------------------------------
     dollarSign: (
       <BadgeDollarSign
         color={props.color ?? 'grey'}
+        size={props.size ?? size_sm}
+      />
+    ),
+    // -------------------------------- Profile ---------------------------------
+    editProfile: (
+      <UserRoundCog
+        color={props.color ?? colors.primary}
+        size={props.size ?? size_sm}
+      />
+    ),
+    email: (
+      <Mail
+        color={props.color ?? colors.primary}
+        size={props.size ?? size_sm}
+      />
+    ),
+    phone: (
+      <Smartphone
+        color={props.color ?? colors.primary}
         size={props.size ?? size_sm}
       />
     ),
