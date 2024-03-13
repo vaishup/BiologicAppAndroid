@@ -59,10 +59,11 @@ const Login = () => {
         password: password2,
       });
       console.log('Signed', isSignedIn);
+      navigation.navigate('Home');
+
     } catch (error) {
       console.log('error signing in', error);
       setIsError(true);
-
       const message = error.toString().split(':').pop().trim();
       setErrMsg(message);
     }
