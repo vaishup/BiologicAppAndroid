@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Platform, StyleSheet, TouchableOpacity} from 'react-native';
 import {
   HStack,
@@ -23,7 +23,7 @@ const Calculator: React.FC<CalculatorProps> = ({onPress}) => {
   const [AmountTxt_CAD, setAmountTxt_CAD] = useState('');
   const [AmountTxt_CFA, setAmountTxt_CFA] = useState('');
 
-  const [CADCFA, setCADCFA] = useState(445.15081);
+  const [CADCFA, setCADCFA] = useState(0);
 
   const formatAmount = (text: string | number) => {
     const amount = parseFloat(text.toString().replace(/,/g, ''));
@@ -32,10 +32,18 @@ const Calculator: React.FC<CalculatorProps> = ({onPress}) => {
       : amount.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
 
+  const fetchData = async () => {
+    setCADCFA(445.15081);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <VStack backgroundColor="white" borderRadius={10} padding={20}>
       <Text size="sm">You Send Exactly</Text>
-      <Input variant="outline">
+      <Input variant="outline" h={48} mt={2}>
         <InputField
           value={AmountTxt_CAD}
           onChangeText={text => {
@@ -66,7 +74,7 @@ const Calculator: React.FC<CalculatorProps> = ({onPress}) => {
           keyboardType="decimal-pad"
         />
         <InputSlot>
-          <HStack px={10} space="xs" width={90}>
+          <HStack px={10} space="xs" width={92}>
             <SvgXml xml={flag_CA} width={30} height={30} />
             <Text fontWeight="$semibold" size="lg" color="#898989">
               CAD
@@ -75,7 +83,7 @@ const Calculator: React.FC<CalculatorProps> = ({onPress}) => {
         </InputSlot>
       </Input>
 
-      <HStack mt={13} space="xs" alignItems="center">
+      <HStack space="xs" alignItems="center" mt={13}>
         <Icon type={'dollarSign'} size={15} />
         <Text size="sm">1 CAD = {CADCFA} CFA</Text>
       </HStack>
@@ -84,7 +92,7 @@ const Calculator: React.FC<CalculatorProps> = ({onPress}) => {
         Recipient Gets
       </Text>
 
-      <Input variant="outline" mb={30}>
+      <Input variant="outline" h={48} mb={30} mt={2}>
         <InputField
           value={AmountTxt_CFA}
           onChangeText={text => {
@@ -115,7 +123,7 @@ const Calculator: React.FC<CalculatorProps> = ({onPress}) => {
           keyboardType="decimal-pad"
         />
         <InputSlot>
-          <HStack px={10} space="xs" width={90}>
+          <HStack px={10} space="xs" width={92}>
             <SvgXml xml={flag_SEN} width={30} height={30} />
             <Text fontWeight="$semibold" size="lg" color="#898989">
               CFA
