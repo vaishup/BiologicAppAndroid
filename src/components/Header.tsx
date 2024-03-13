@@ -6,8 +6,10 @@ import Icon from './IconPack';
 interface HeaderProps {
   title?: string;
   leftBtn?: string;
+  leftBtnSize?: number;
   leftAction?: () => void;
   rightBtn?: string;
+  rightBtnSize?: number;
   rightAction?: () => void;
   isShowLogo?: boolean;
   height?: number;
@@ -16,8 +18,10 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({
   title,
   leftBtn,
+  leftBtnSize,
   leftAction,
   rightBtn,
+  rightBtnSize,
   rightAction,
   isShowLogo,
   height,
@@ -35,7 +39,7 @@ const Header: React.FC<HeaderProps> = ({
                 navigation.goBack();
               }
         }>
-        <Icon type={leftBtn ? leftBtn : 'backArrow'} size={30} />
+        <Icon type={leftBtn ? leftBtn : 'backArrow'} size={leftBtnSize ?? 35} />
       </TouchableOpacity>
       {title && (
         <Text alignSelf="center" fontWeight="$semibold" size="lg">
@@ -52,7 +56,7 @@ const Header: React.FC<HeaderProps> = ({
       )}
 
       <TouchableOpacity style={{width: 30}} onPress={rightAction}>
-        {rightBtn && <Icon type={rightBtn} size={30} />}
+        {rightBtn && <Icon type={rightBtn} size={rightBtnSize ?? 35} />}
       </TouchableOpacity>
     </HStack>
   );

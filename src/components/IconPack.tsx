@@ -8,19 +8,18 @@ import {
   Info,
   LayoutDashboard,
   LogOut,
+  Mail,
   Send,
+  Settings,
   ShieldAlert,
+  Smartphone,
   UserRound,
+  UserRoundCog,
   UsersRound,
   WalletMinimal,
   User2,
-  Mail,
-  Lock,
-  Phone,
-  Smartphone,
-  Eye,
-  EyeOff,
-  ChevronDown,
+  Eye,EyeOff,ChevronDown,Lock,
+ 
 } from 'lucide-react-native';
 import {colors} from '../styles/colors';
 
@@ -38,9 +37,10 @@ const Icon = (props: IconProps) => {
   const size_sm = '27';
 
   let icons: Dictionary<any> = {
+    // -------------------------------- Header ---------------------------------
     backArrow: (
       <ChevronLeft
-        color={props.color ?? colors.secondary}
+        color={props.color ?? colors.primary}
         size={props.size ?? size_sm}
       />
     ),
@@ -96,14 +96,33 @@ const Icon = (props: IconProps) => {
     signOut: (
       <LogOut color={props.color ?? 'white'} size={props.size ?? size_sm} />
     ),
-    //
+    // -------------------------------- Transaction ---------------------------------
     dollarSign: (
       <BadgeDollarSign
         color={props.color ?? 'grey'}
         size={props.size ?? size_sm}
       />
     ),
-    // by vaishali 
+    // -------------------------------- Profile ---------------------------------
+    editProfile: (
+      <UserRoundCog
+        color={props.color ?? colors.primary}
+        size={props.size ?? size_sm}
+      />
+    ),
+    email: (
+      <Mail
+        color={props.color ?? colors.primary}
+        size={props.size ?? size_sm}
+      />
+    ),
+    phone: (
+      <Smartphone
+        color={props.color ?? colors.primary}
+        size={props.size ?? size_sm}
+      />
+    ),
+    //by vaishali 
     userIcon: (
       <User2
         color={props.color !== undefined ? props.color : '#C9C9C9'}
@@ -122,7 +141,7 @@ const Icon = (props: IconProps) => {
         size={props.size !== undefined ? props.size : 27}
       />
     ),
-    phone: (
+    Smartphone: (
       <Smartphone
         color={props.color !== undefined ? props.color : '#C9C9C9'}
         size={props.size !== undefined ? props.size : 27}
@@ -146,6 +165,7 @@ const Icon = (props: IconProps) => {
         size={props.size !== undefined ? props.size : 27}
       />
     ),
+
   };
 
   return icons[props.type];
