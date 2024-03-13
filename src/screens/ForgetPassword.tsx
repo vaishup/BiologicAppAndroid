@@ -48,11 +48,13 @@ const ForgetPassword = () => {
   const initialValues = {email: '', password: ''};
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  //const navigation = useNavigation<ScreenType>();
+ const navigation = useNavigation<ScreenType>();
 
   const handleSubmit = () => {
     // Handle signup logic here
     console.log('Form values:');
+    navigation.navigate('ResetPassword')
+
   };
   const handleState = () => {
     setShowPassword(showState => {
@@ -69,7 +71,7 @@ const ForgetPassword = () => {
         <Box>
           <ImageView
             alt="Logo Styles"
-            source={require('../assets/logo.png')}
+            source={require('../assets/logo_withName.png')}
             style={styles.imageStyle}
           />
 <Heading color='#005DAA' justifyContent='center' alignSelf='center'>Forget  Password</Heading>
@@ -79,7 +81,7 @@ const ForgetPassword = () => {
               <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
                 {'Email'}
               </Text>
-              <Input style={{borderRadius: 10, height: 45}}>
+              <Input style={{borderRadius: 5, height: 45}}>
                 <InputField placeholder="Email" />
                 <InputSlot pr="$3">
                   <Mail color={'#C9C9C9'} size={27} />
@@ -131,12 +133,12 @@ const styles = StyleSheet.create({
   loginButton: {
     borderRadius: 15,
     backgroundColor: '#005DAA',
-    width: '100%',
+    width: '90%',
     minHeight: 50,
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf:'center'
   },
-
   forgotPassword: {
     color: '#005DAA',
     padding: 5,

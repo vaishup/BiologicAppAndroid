@@ -12,6 +12,8 @@ import {
 import Icon from '../components/icon/IconPack';
 import {Mail, Check, AlertCircle, Lock, User2} from 'lucide-react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import * as Yup from 'yup';
+import {Formik, Field} from 'formik';
 
 import {
   Checkbox,
@@ -33,11 +35,35 @@ import {
   KeyboardAvoidingView,
   Spinner,
   InputIcon,
+  Select,
+  SelectContent,
+  SelectTrigger,
+  SelectInput,
+  SelectDragIndicator,
+  SelectDragIndicatorWrapper,
+  SelectItem,
+  SelectPortal,
+  SelectBackdrop,
+  Icon as Icons,
+  SelectIcon,
+  ChevronDownIcon,
 } from '@gluestack-ui/themed';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import DropDownPicker from 'react-native-dropdown-picker';
 import PhoneNumberInput from '../components/PhoneNumberInput';
+import {confirmSignUp} from 'aws-amplify/auth';
+import {generateClient} from 'aws-amplify/api';
+import { signUpUser } from "../hooks/authServices";
 
+import {
+  signUp,
+  signIn,
+  fetchUserAttributes,
+  getCurrentUser,
+  updateUserAttributes,
+  updateUserAttribute,
+  signOut,
+} from '@aws-amplify/auth';
+import {useNavigation} from '@react-navigation/native';
 const {width, height} = Dimensions.get('window');
 
 const SignUp = () => {
@@ -45,16 +71,107 @@ const SignUp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [enableCheckbox, setEnableCheckbox] = useState(false);
+  const [selectedPhoneCode, setSelectedPhoneCode] = useState('+234'); // Default selected phone code
+  const [isOtpStage, setIsOtpStage] = useState(false);
+  const [username, setUsername] = useState('');
+  const [otpError, setOtpError] = useState('');
+  const API = generateClient();
+  const [hasAgreed, setHasAgreed] = useState(false);
+  const [countryCode, setCountryCode] = useState('+1');
+  const [tableID, setTableID] = useState('');
+  const [canResend, setCanResend] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [errMsg, setErrMsg] = useState('');
+
+  const navigation = useNavigation();
 
   const handleSubmit = () => {
     // Handle signup logic here
     console.log('Form values:');
+    navigation.navigate('Home');
   };
   const handleState = () => {
     setShowPassword(showState => {
       return !showState;
     });
   };
+  const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+
+  const passPass =
+    /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/;
+
+  const schema = Yup.object().shape({
+    userName: Yup.string().required('Username required'),
+    email: Yup.string().email('Invalid email').required('Email required'),
+    // phone: Yup.string().matches(phoneRegExp, 'Invalid phone'),
+    phone: Yup.string()
+      .matches(phoneRegExp, 'Invalid phone')
+      .required('Invalid phone'),
+    password: Yup.string()
+      .matches(passPass, 'Password should be alphanumeric (a-z, A-Z, 0-9)')
+      .required('Password should be alphanumeric (a-z, A-Z, 0-9)'),
+    acceptTerms: Yup.boolean()
+      .required('You must accept the Terms of Service')
+      .oneOf([true], 'You must accept the Terms of Service'),
+  });
+
+  const handleChangeSpace = (newString: string) => {
+    const textWithoutSpaces = newString.replace(/\s+/g, '');
+    return textWithoutSpaces;
+  };
+  async function updateCustomAttribute(newAttributeValue) {
+    try {
+      // Assuming `getCurrentUser` returns a user object similar to what AWS Amplify Auth.currentAuthenticatedUser() would return
+      const user = await getCurrentUser();
+
+      // Construct the input object expected by `updateUserAttribute'
+      const input = {
+        userAttribute: {
+          attributeKey: 'custom:TableID', // The key of the attribute you want to update
+          value: newAttributeValue, // The new value for the custom attribute
+        },
+        options: {},
+      };
+
+      // Call `updateUserAttribute` with the constructed input
+      const result = await updateUserAttribute(input);
+
+      console.log('Attribute update result: ', result);
+    } catch (error) {
+      console.error('Error updating user attributes:', error);
+    }
+  }
+
+  // signup function is here
+  async function handleSignUp(values) {
+    const fullPhoneNumber = `${countryCode}${values.phone_number.replace(/\D/g,"")}`;
+    console.log(values);
+    try {
+      // Await the signUpUser call and capture the signUpResponse
+      const signUpResponse = await signUpUser({
+        username: values.email, // Assuming username is the email
+        password: values.password,
+        email: values.email,
+        phone_number: "+16476419995",
+        autoSignIn: { enabled: false },
+      });
+
+      console.log("Success", signUpResponse);
+      setUsername(values.email);
+      console.log("Username set to:", values.email);
+      setIsOtpStage(true);
+      navigation.navigate('OTP', {
+              phone_number: "+16476419995",
+              username: values.email,
+              lastname:values.lastname,
+              password: values.password,
+              email:values.email
+            });
+    } catch (error) {
+      console.log("Error", error);
+    }
+  }
 
   return (
     <KeyboardAwareScrollView
@@ -65,104 +182,236 @@ const SignUp = () => {
         <Box>
           <ImageView
             alt="Logo Styles"
-            source={require('../assets/logo.png')}
+            source={require('../assets/logo_withName.png')}
             style={styles.imageStyle}
           />
-          <VStack space={'xl'}  p={30}>
-            <Box style={[styles.container]}>
-              <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
-                {'First Name'}
+          <Formik
+            initialValues={{
+             
+              email: '',
+              userName: '',
+              lastname: '',
+              phone_number: '',
+              password: '',
+            }}
+            validationSchema={schema}
+            onSubmit={values => {
+              console.log(values);
+            }}>
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+              setFieldValue,
+            }) => (
+              <VStack space={'xl'} p={30}>
+                <Box style={[styles.container]}>
+                  <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
+                    {'First Name'}
+                  </Text>
+                  <Input>
+                    <InputField
+                      onChangeText={handleChange('userName')}
+                      onBlur={handleBlur('userName')}
+                      value={values.userName}
+                      placeholder="First Name"
+                    />
+                    <InputSlot pr="$3">
+                      {touched.userName && errors.userName ? (
+                        <AlertCircle color={'red'} size={27} />
+                      ) : (
+                        <Icon color={'#C9C9C9'} size={27} type={'user'} />
+                      )}
+                    </InputSlot>
+                  </Input>
+                  {touched.userName && errors.userName && (
+                    <Text color="red">{errors.userName}</Text>
+                  )}
+                </Box>
+                <Box style={[styles.container]}>
+                  <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
+                    {'Last Name'}
+                  </Text>
+                  <Input>
+                    <InputField
+                      onChangeText={handleChange('lastname')}
+                      onBlur={handleBlur('lastname')}
+                      value={values.lastname}
+                      placeholder="Last Name"
+                    />
+                    <InputSlot pr="$3">
+                      {touched.lastname && errors.lastname ? (
+                        <AlertCircle color={'red'} size={27} />
+                      ) : (
+                        <Icon color={'#C9C9C9'} size={27} type={'user'} />
+                      )}
+                    </InputSlot>
+                  </Input>
+                  {touched.lastname && errors.lastname && (
+                    <Text color="red">{errors.lastname}</Text>
+                  )}
+                </Box>
+                <Box style={[styles.container]}>
+                  <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
+                    {'Email'}
+                  </Text>
+                  <Input>
+                    <InputField
+                      onChangeText={handleChange('email')}
+                      onBlur={handleBlur('fullName')}
+                      value={values.email}
+                      placeholder="Email"
+                    />
+                    <InputSlot pr="$3">
+                      {touched.email && errors.email ? (
+                        <AlertCircle color={'red'} size={27} />
+                      ) : (
+                        <Icon color={'#C9C9C9'} size={27} type={'user'} />
+                      )}
+                    </InputSlot>
+                  </Input>
+                  {touched.email && errors.email && (
+                    <Text color="red">{errors.email}</Text>
+                  )}
+                </Box>
+                <Box style={[styles.container]}>
+                  <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
+                    {'Phone Number'}
+                  </Text>
+                  <HStack space="sm">
+                    <Select
+                      style={{
+                        width: '33%',
+                        borderRadius: 10,
+                        backgroundColor: '#f2f2f2',
+                        borderColor: '#cccccc',
+                      }}
+                      selectedValue={selectedPhoneCode}
+                      onValueChange={itemValue =>
+                        setSelectedPhoneCode(itemValue)
+                      }>
+                      <SelectTrigger variant="outline" size="md">
+                        <SelectInput />
+                        <SelectIcon
+                          style={{
+                            backgroundColor: 'transparent',
+                            marginRight: 5,
+                            padding: 8,
+                          }}>
+                          <Icons as={ChevronDownIcon} />
+                        </SelectIcon>
+                      </SelectTrigger>
+                      <SelectPortal>
+                        <SelectBackdrop />
+                        <SelectContent>
+                          <SelectDragIndicatorWrapper>
+                            <SelectDragIndicator />
+                          </SelectDragIndicatorWrapper>
+                          <SelectItem label="+234" value="+234" />
+                          <SelectItem label="+1" value="+1" />
+                        </SelectContent>
+                      </SelectPortal>
+                    </Select>
+                    <Input style={{borderRadius: 5, width: '66%', height: 42}}>
+                      <InputField
+                        onChangeText={handleChange('phone_number')}
+                        onBlur={handleBlur('phone_number')}
+                        value={values.phone_number}
+                        placeholder="Phone Number"
+                      />
+                      <InputSlot pr="$3">
+                        {touched.phone_number && errors.phone_number ? (
+                          <AlertCircle color={'red'} size={27} />
+                        ) : (
+                          <Icon color={'#C9C9C9'} size={27} type={'phone'} />
+                        )}
+                      </InputSlot>
+                    </Input>
+                    {touched.phone_number && errors.phone_number && (
+                      <Text color="red">{errors.phone_number}</Text>
+                    )}
+                  </HStack>
+                </Box>
+                <Box style={[styles.container]}>
+                  <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
+                    {'Password'}
+                  </Text>
+                  <Input>
+                    <InputField
+                      onChangeText={handleChange('password')}
+                      onBlur={handleBlur('password')}
+                      value={handleChangeSpace(values.password)}
+                      placeholder="Password"
+                      placeholderTextColor={'#a6a6a6'}
+                      type={showPassword ? 'text' : 'password'}
+                    />
+                    <InputSlot pr="$3" onPress={handleState}>
+                      {touched.password && errors.password ? (
+                        <AlertCircle color={'red'} size={27} />
+                      ) : (
+                        <Icon
+                          type={showPassword ? 'eye' : 'eyeOff'}
+                          color={'#C9C9C9'}
+                        />
+                      )}
+                    </InputSlot>
+                  </Input>
+                  {touched.password && errors.password && (
+                    <Text color="red">{errors.password}</Text>
+                  )}
+                </Box>
+                <Checkbox
+                  value="Eng"
+                  aria-label="Close"
+                  size="sm"
+                  // isChecked={field.value}
+                >
+                  <CheckboxIndicator borderColor="#C9C9C9" mr="$2">
+                    <CheckboxIcon as={Check} backgroundColor="#008000" />
+                  </CheckboxIndicator>
+                  <CheckboxLabel style={{color: '#005DAA', fontSize: 14}}>
+                    Accept our Terms & Conditions to continue
+                  </CheckboxLabel>
+                </Checkbox>
+
+                <VStack>
+                  <TouchableOpacity
+                    disabled={isLoading}
+                    style={styles.loginButton}
+                    onPress={() => {
+                      handleSubmit();
+                      handleSignUp(values)
+                      // signUpUser({
+                      //   username: handleChangeSpace(values.email),
+                      //   password: handleChangeSpace(values.password),
+                      //   email: handleChangeSpace(values.email),
+                      //   phone_number: handleChangeSpace(values.phone_number),
+                        
+                      // });
+                    }}>
+                    {isLoading ? (
+                      <Spinner size="small" />
+                    ) : (
+                      <Text style={styles.btnText}>SingUp</Text>
+                    )}
+                  </TouchableOpacity>
+                </VStack>
+              </VStack>
+            )}
+          </Formik>
+          <Box style={styles.signupContainer}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('Login');
+              }}>
+              <Text style={styles.signupText}>
+                Already have an account?{' '}
+                <Text style={styles.boldText}>Login</Text>
               </Text>
-              <Input style={{borderRadius: 10, height: 45}}>
-                <InputField placeholder="First Name" />
-                <InputSlot pr="$3">
-                  <Icon type="user" color={'#C9C9C9'} />
-                </InputSlot>
-              </Input>
-            </Box>
-            <Box style={[styles.container]}>
-              <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
-                {'Last Name'}
-              </Text>
-              <Input style={{borderRadius: 10, height: 45}}>
-                <InputField placeholder="Last Name" />
-                <InputSlot pr="$3">
-                  <Icon type="user" color={'#C9C9C9'} />
-                </InputSlot>
-              </Input>
-            </Box>
-            <Box style={[styles.container]}>
-              <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
-                {'Email'}
-              </Text>
-              <Input style={{borderRadius: 10, height: 45}}>
-                <InputField placeholder="Email" />
-                <InputSlot pr="$3">
-                <Mail color={'#C9C9C9'} size={27} />
-                </InputSlot>
-              </Input>
-            </Box>
-            <Box style={[styles.container]}>
-              <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
-                {'Phone Number'}
-              </Text>
-              <PhoneNumberInput/>
-              {/* <Input style={{borderRadius: 10, height: 45}}>
-                <InputField placeholder="Phone Number" keyboardType='numeric'/>
-                <InputSlot pr="$3">
-                  <Icon type="phoneNo" color={'#C9C9C9'} />
-                </InputSlot>
-              </Input> */}
-            </Box>
-            <Box style={[styles.container]}>
-              <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
-                {'Password'}
-              </Text>
-              <Input style={{borderRadius: 10, height: 45}}>
-                <InputField type={showPassword ? 'text' : 'password'} placeholder='Password' />
-                <InputSlot pr="$3" onPress={handleState}>
-                  <Icon
-                    type={showPassword ? 'eye' : 'eyeOff'}
-                    color={'#C9C9C9'}
-                  />
-                </InputSlot>
-              </Input>
-            </Box>
-            <Checkbox
-              value="Eng"
-              aria-label="Close"
-              size="sm"  
-              // isChecked={field.value}
-              >
-              <CheckboxIndicator borderColor="#C9C9C9" mr="$2">
-                <CheckboxIcon as={Check} backgroundColor="#008000" />
-              </CheckboxIndicator>
-              <CheckboxLabel style={{color: '#005DAA', fontSize: 14}}>
-                Accept our Terms & Conditions to continue
-              </CheckboxLabel>
-            </Checkbox>
-       
-            <VStack p={10}>
-              
-              <TouchableOpacity
-                disabled={isLoading}
-                style={styles.loginButton}
-                onPress={handleSubmit}>
-                {isLoading ? (
-                  <Spinner size="small" />
-                ) : (
-                  <Text style={styles.btnText}>SingUp</Text>
-                )}
-              </TouchableOpacity>
-            </VStack>
-            </VStack>
-            <Box style={styles.signupContainer}>
-              <TouchableOpacity>
-                <Text style={styles.signupText}>
-                  Already have an account?{' '}
-                  <Text style={styles.boldText}>Signup</Text>
-                </Text>
-              </TouchableOpacity>
+            </TouchableOpacity>
           </Box>
         </Box>
       </SafeAreaView>
@@ -203,7 +452,7 @@ const styles = StyleSheet.create({
     color: '#005DAA',
     justifyContent: 'flex-end',
     alignSelf: 'flex-end',
-    paddingBottom:10,
+    paddingBottom: 10,
   },
   signupText: {
     color: 'black',
@@ -215,9 +464,6 @@ const styles = StyleSheet.create({
   signupContainer: {
     justifyContent: 'flex-end',
     alignSelf: 'center',
-    minHeight: 50,
-    maxHeight: 100,
-    paddingHorizontal: 20,
   },
   input: {
     position: 'absolute',

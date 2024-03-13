@@ -33,18 +33,32 @@ import Icon from '../components/icon/IconPack';
 const {width, height} = Dimensions.get('window');
 
 const PhoneNumberInput = () => {
+  const [selectedPhoneCode, setSelectedPhoneCode] = useState('+234'); // Default selected phone code
+
   return (
     //   <KeyboardAwareScrollView
     //     style={{ flex: 1 }}
     //     contentContainerStyle={{ flexGrow: 1 }}
     //     keyboardShouldPersistTaps="handled"
     //   >
-    <HStack style={{padding: 10}} space="sm">
-      <Select style={{width: '33%'}}>
+    <HStack space="sm">
+      <Select
+        style={{
+          width: '33%',
+         
+          borderRadius: 10,
+          backgroundColor: '#f2f2f2',
+          borderColor: '#cccccc',
+        }}
+        selectedValue={selectedPhoneCode}
+        onValueChange={itemValue => setSelectedPhoneCode(itemValue)}>
+       
         <SelectTrigger variant="outline" size="md">
           <SelectInput />
-          <SelectIcon>
-            <Icons as={ChevronDownIcon} style={{margin:4}}/>
+          <SelectIcon style={{ backgroundColor: 'transparent',
+                      marginRight:5,
+                      padding: 8,}}>
+            <Icons as={ChevronDownIcon} />
           </SelectIcon>
         </SelectTrigger>
         <SelectPortal>
@@ -53,14 +67,13 @@ const PhoneNumberInput = () => {
             <SelectDragIndicatorWrapper>
               <SelectDragIndicator />
             </SelectDragIndicatorWrapper>
-            <SelectItem label="+234" value="+234" />
+            <SelectItem  label="+234" value="+234" />
             <SelectItem label="+1" value="+1" />
           </SelectContent>
         </SelectPortal>
       </Select>
-
-      <Input style={{width: '75%', height: '100%'}}>
-        <InputField placeholder="Enter Phone Number" keyboardType="numeric" />
+      <Input style={{borderRadius: 5, width: '66%', height: 42}}>
+        <InputField placeholder=" Phone Number" keyboardType="numeric" />
       </Input>
     </HStack>
     //   </KeyboardAwareScrollView>

@@ -10,20 +10,18 @@ import SignUp from '../screens/SignUp';
 import Login from '../screens/Login';
 import ForgetPassword from '../screens/ForgetPassword';
 import ResetPassword from '../screens/ResetPassword';
+import ChangePassword from '../screens/ChangePassword';
 
 import SavedRecipients from '../screens/SavedRecipents';
 import AboutUs from '../screens/AboutUs';
-import ChangePassword from '../screens/ChangePassword';
 import HelpCenter from '../screens/HelpCenter';
 import PrivacyPolicy from '../screens/PrivacyPolicy';
 import Profile from '../screens/Profile';
+import OTP from '../screens/OTP';
 
 export type NavigationParams = {
   Home: undefined;
-  SignUp:undefined;
-  Login:undefined;
-  ForgetPassword:undefined;
-  ResetPassword:undefined;
+  OTP: undefined;
 };
 
 const Stack = createNativeStackNavigator();
@@ -33,16 +31,6 @@ const Tab = createBottomTabNavigator();
 const Root = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="SignUp" component={HOC(SignUp)} />
-
-      <Stack.Screen name="ResetPassword" component={HOC(ResetPassword)} />
-      <Stack.Screen name="ForgetPassword" component={HOC(ForgetPassword)} />
-     
-      <Stack.Screen name="Login" component={HOC(Login)} />
-
-        <Stack.Screen name="Home" component={HOC(Home)} />
-      </Stack.Navigator>
       <Drawer.Navigator
         screenOptions={{
           headerShown: false,
@@ -71,7 +59,12 @@ const Root = () => {
 const HomeStack = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Home" component={HOC(Home)} />
+     <Stack.Screen name="Home" component={HOC(Home)} />
+      <Stack.Screen name="SignUp" component={HOC(SignUp)} />
+      <Stack.Screen name="Login" component={HOC(Login)} />   
+      <Stack.Screen name="OTP" component={HOC(OTP)} />
+      <Stack.Screen name="ResetPassword" component={HOC(ResetPassword)} />
+      <Stack.Screen name="ForgetPassword" component={HOC(ForgetPassword)} />
       <Stack.Screen name="Profile" component={HOC(Profile)} />
     </Stack.Navigator>
   );

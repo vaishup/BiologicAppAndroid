@@ -49,6 +49,7 @@ const ResetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   //const navigation = useNavigation<ScreenType>();
+  const navigation = useNavigation();
 
   const handleSubmit = () => {
     // Handle signup logic here
@@ -69,7 +70,7 @@ const ResetPassword = () => {
         <Box>
           <ImageView
             alt="Logo Styles"
-            source={require('../assets/logo.png')}
+            source={require('../assets/logo_withName.png')}
             style={styles.imageStyle}
           />
 <Heading color='#005DAA' justifyContent='center' alignSelf='center'>Reset  Password</Heading>
@@ -79,7 +80,7 @@ const ResetPassword = () => {
               <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
                 {'New Password'}
               </Text>
-              <Input style={{borderRadius: 10, height: 45}}>
+              <Input style={{borderRadius: 5, height: 45}}>
                 <InputField type={showPassword ? 'text' : 'password'} placeholder='New Password' />
                 <InputSlot pr="$3" onPress={handleState}>
                   <Icon
@@ -93,7 +94,7 @@ const ResetPassword = () => {
               <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
                 {'Confirm Password'}
               </Text>
-              <Input style={{borderRadius: 10, height: 45}}>
+              <Input style={{borderRadius: 5, height: 45}}>
                 <InputField type={showPassword ? 'text' : 'password'} placeholder='Confirm Password' />
                 <InputSlot pr="$3" onPress={handleState}>
                   <Icon
@@ -151,10 +152,11 @@ const styles = StyleSheet.create({
   loginButton: {
     borderRadius: 15,
     backgroundColor: '#005DAA',
-    width: '100%',
+    width: '90%',
     minHeight: 50,
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf:'center'
   },
 
   forgotPassword: {
