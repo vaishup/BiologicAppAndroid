@@ -24,6 +24,9 @@ const OTP = ({phone}: OTPProps) => {
   const phone_number = route.params?.phone_number;
   const password = route.params?.password;
   const email = route.params?.email;
+  const acceptTerms = route.params?.acceptTerms;
+  console.log("acceptTerms!!",!acceptTerms);
+  
 //   const forgetPassword = route.params?.forgetPassword;
 //   const signUpPassword = route.params?.password;
 //   const BusinessOwner = route.params?.isBusinessOwner;
@@ -43,7 +46,7 @@ const OTP = ({phone}: OTPProps) => {
           
           <OTPField
             username={username}
-            lastname={lastname}
+            acceptTerms={!acceptTerms}
             email={email}
             phoneNumber={phone_number}
             password={password}

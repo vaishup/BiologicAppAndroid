@@ -27,7 +27,7 @@ import {
 } from '@aws-amplify/auth';
 import {generateClient} from 'aws-amplify/api';
 
-import {signInUser} from '../hooks/authServices';
+import { useAuth } from '../navigation';
 /* 
 
 style: Custom style of input wrapper (e.g. {{padding: 10}})
@@ -38,11 +38,11 @@ code: Pass by sign up page
 interface inputProps {
   style?: StyleProp<ViewStyle>;
   username: string;
-  lastname: string;
   email: string;
   phoneNumber: string;
   password: string;
   code?: string;
+  acceptTerms?:boolean;
   // forgetPassword: boolean;
   // signUpPassword: string;
   // isBusinessOwner: boolean;
@@ -65,6 +65,7 @@ const OTPField = (props: inputProps) => {
     const [num, setNum] = useState('0');
     const [resendCheck, setResendCheck] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
+    const {setIsUserAuth,} = useAuth();
 
     //const {isUserAuth, setIsUserAuth, setIsBusinessOwner} = useAuth();
     const navigation = useNavigation();
@@ -77,7 +78,7 @@ const OTPField = (props: inputProps) => {
     const [otpError, setOtpError] = useState('');
     const API = generateClient();
     const [hasAgreed, setHasAgreed] = useState(false);
-    const [countryCode, setCountryCode] = useState('+1');
+    const [acceptTerms, setAcceptTerms] = useState(false);
     const [tableID, setTableID] = useState('');
     const [canResend, setCanResend] = useState(false);
     const inputsRef = useRef([]);
@@ -136,10 +137,6 @@ const OTPField = (props: inputProps) => {
           username:username,
           confirmationCode: code,
         });
-        console.log("response", response);
-      
-        console.log('enterCode', enterCode);
-        console.log('username', username);
         await signIn({
           username:props.email, // Assuming this is the email or username used for sign-up
           password: props.password, // You might need to manage password differently
@@ -147,16 +144,13 @@ const OTPField = (props: inputProps) => {
 
         // Use userId for the id field in the input
         const input = {
-          firstName: props.username,
-          lastName: "vbs",
+          name: props.username,
           email: props.email,
-          phoneNumber: props.phoneNumber,
-          dateOfBirth: '2000-01-01',
-          termsAndConditionsAccepted: true,
-          privacyPolicyAcknowledged: true,
+          phoneNumber: props.phoneNumber,        
+          termsAndConditionsAccepted: acceptTerms,
+          privacyPolicyAcknowledged: acceptTerms,
           indentificationVerified: false,
         };
-
         // Call the createUserModel mutation with the input
         const createUser = await API.graphql({
           query: mutations.createUser,
@@ -172,8 +166,8 @@ const OTPField = (props: inputProps) => {
         await updateCustomAttribute(createUser.data.createUser.id);
         // Navigate to the Dashboard page
         setOtpError('');
-        navigation.navigate('Home');
-
+        setIsUserAuth(true)
+        navigation.navigate('DrawNavigator');
         //onLoginSuccess();
       } catch (error) {
         console.error('Error verifying OTP', error);

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
   Image as ImageView,
@@ -12,6 +12,9 @@ import {AlertCircle} from 'lucide-react-native';
 import {useNavigation} from '@react-navigation/native';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import CustomButton from '../components/Button';
+import {colors} from '../styles/colors';
+
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {
   Text,
@@ -23,8 +26,8 @@ import {
   Spinner,
 } from '@gluestack-ui/themed';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {signIn} from 'aws-amplify/auth';
-
+import {signIn, signOut} from 'aws-amplify/auth';
+import {useAuth} from '../navigation';
 const {width, height} = Dimensions.get('window');
 
 const Login = () => {
@@ -35,6 +38,7 @@ const Login = () => {
   const [passwordInput, setPassword] = useState('');
   const [isError, setIsError] = useState(false);
   const [errMsg, setErrMsg] = useState('');
+  const {setIsUserAuth} = useAuth();
 
   const schema = Yup.object().shape({
     email: Yup.string()
@@ -51,7 +55,18 @@ const Login = () => {
     const textWithoutSpaces = newString.replace(/\s+/g, '');
     return textWithoutSpaces;
   };
-
+  useEffect(() => {
+    // Add a listener for when the component is focused
+    // handleSignOut();
+    // console.log("ss");
+  }, []);
+  async function handleSignOut() {
+    try {
+      await signOut();
+    } catch (error) {
+      console.log('error signing out: ', error);
+    }
+  }
   async function userSignIn({username2, password2}) {
     try {
       const {isSignedIn} = await signIn({
@@ -59,8 +74,8 @@ const Login = () => {
         password: password2,
       });
       console.log('Signed', isSignedIn);
-      navigation.navigate('Home');
-
+      setIsUserAuth(true);
+      navigation.navigate('DrawNavigator');
     } catch (error) {
       console.log('error signing in', error);
       setIsError(true);
@@ -115,7 +130,7 @@ const Login = () => {
                 p={30}>
                 <Box style={[styles.container]}>
                   <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
-                    {'Name'}
+                    {'Email'}
                   </Text>
                   <Input>
                     <InputField
@@ -124,14 +139,14 @@ const Login = () => {
                       }}
                       onBlur={handleBlur('email')}
                       value={handleChangeSpace(values.email)}
-                      placeholder="Username"
+                      placeholder="Email"
                       placeholderTextColor={'#a6a6a6'}
                     />
                     <InputSlot pr="$3">
                       {touched.email && errors.email ? (
                         <AlertCircle color={'red'} size={27} />
                       ) : (
-                        <Icon type="user" color={'#C9C9C9'} />
+                        <Icon color={'#C9C9C9'} size={27} type={'mail'} />
                       )}
                     </InputSlot>
                   </Input>
@@ -174,43 +189,52 @@ const Login = () => {
                     }}>
                     <Text style={styles.forgotPassword}>Forgot Password?</Text>
                   </TouchableOpacity>
-                
-                <TouchableOpacity
-                  disabled={isLoading}
-                  style={styles.loginButton}
-                  onPress={() => {
-                    handleSubmit();
-                    userSignIn({
-                      username2: handleChangeSpace(values.email),
-                      password2: handleChangeSpace(values.password),
-                    });
-                  }}>
-                  {isLoading ? (
-                    <Spinner size="small" />
-                  ) : (
-                    <Text style={styles.btnText}>Login</Text>
+                  {/* {isLoading ? (
+                      <Spinner size="small" />
+                      ) : ( */}
+                  <CustomButton
+                    action={() => {
+                      handleSubmit();
+                      userSignIn({
+                        username2: handleChangeSpace(values.email),
+                        password2: handleChangeSpace(values.password),
+                      });
+                    }}
+                    backgroundColor={colors.primary}
+                    text="Login"
+                    textColor={colors.white}
+                  />
+                  {/* )} */}
+                  {isError && (
+                    <Box style={{alignSelf: 'center', marginTop: 10}}>
+                      <Text style={{color: 'red'}}>{errMsg}</Text>
+                    </Box>
                   )}
-                </TouchableOpacity>
+                  {/* <TouchableOpacity
+                    disabled={isLoading}
+                    style={styles.loginButton}
+                    >
+                    {isLoading ? (
+                      <Spinner size="small" />
+                    ) : (
+                      <Text style={styles.btnText}>Login</Text>
+                    )}
+                  </TouchableOpacity> */}
                 </VStack>
-                {isError && (
-                  <Box style={{alignSelf: 'center', marginTop: 10}}>
-                    <Text style={{color: 'red'}}>{errMsg}</Text>
-                  </Box>
-                )}
               </VStack>
             )}
           </Formik>
-            
-          <Box style={[styles.signupContainer, { flex: 1 }]}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate('SignUp');
-                }}>
-                <Text style={styles.signupText}>
-                  Don't have an account?{' '}
-                  <Text style={styles.boldText}>Signup</Text>
-                </Text>
-              </TouchableOpacity>
+
+          <Box style={[styles.signupContainer, {flex: 1}]}>
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate('SignUp');
+              }}>
+              <Text style={styles.signupText}>
+                Don't have an account?{' '}
+                <Text style={styles.boldText}>Signup</Text>
+              </Text>
+            </TouchableOpacity>
           </Box>
         </Box>
       </SafeAreaView>

@@ -63,18 +63,20 @@ export async function getUserInfo() {
     const userInfo = /* GraphQL */ `
       query MyQuery($id: ID!) {
         getUser(id: $id) {
-          phoneNumber
-          lastName
+          id
           firstName
-          email
+          lastName
           dateOfBirth
-          address
+          email
+          name       
         }
       }
     `;
     // Use the API.graphql method to send the query
     const { data } = await client.graphql({
       query: userInfo,
+      variables: { id: tableID }, // Ensure you pass the variables correctly
+
     });
     // Assuming the API returns the user object directly
     const { getUser } = data;
@@ -85,7 +87,7 @@ export async function getUserInfo() {
       firstName: getUser.firstName,
       email: getUser.email,
       dateOfBirth: getUser.dateOfBirth,
-      address: getUser.address,
+      name:getUser.name
     };
   } catch (err) {
     console.log(err);

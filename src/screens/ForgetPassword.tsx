@@ -1,41 +1,26 @@
 import React, {useState} from 'react';
 
 import {
-  View,
   Text as TextView,
   Image as ImageView,
   Dimensions,
   StyleSheet,
-  TouchableOpacity,
-  Platform,
-  
 } from 'react-native';
-import Icon from '../components/IconPack';
-import {AlertCircle} from 'lucide-react-native';
+
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import CustomButton from '../components/Button';
+import {colors} from '../styles/colors';
 
 import {
-  Checkbox,
-  CheckboxIndicator,
-  CheckboxIcon,
-  CheckboxLabel,
-  Button,
   Text,
   Box,
-  Image,
   VStack,
   Input,
   InputField,
   InputSlot,
-  HStack,
-  ScrollView,
-  Modal,
-  ModalBackdrop,
-  KeyboardAvoidingView,
   Spinner,
-  InputIcon,Heading
- 
+  Heading,
 } from '@gluestack-ui/themed';
 import {Mail} from 'lucide-react-native';
 
@@ -47,13 +32,12 @@ const ForgetPassword = () => {
   const initialValues = {email: '', password: ''};
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
- const navigation = useNavigation<ScreenType>();
+  const navigation = useNavigation<ScreenType>();
 
   const handleSubmit = () => {
     // Handle signup logic here
     console.log('Form values:');
-    navigation.navigate('ResetPassword')
-
+    navigation.navigate('ResetPassword');
   };
   const handleState = () => {
     setShowPassword(showState => {
@@ -73,7 +57,9 @@ const ForgetPassword = () => {
             source={require('../assets/logo_withName.png')}
             style={styles.imageStyle}
           />
-<Heading color='#005DAA' justifyContent='center' alignSelf='center'>Forget  Password</Heading>
+          <Heading color="#005DAA" justifyContent="center" alignSelf="center">
+            Forget Password
+          </Heading>
 
           <VStack space={'xl'} p={30}>
             <Box style={[styles.container]}>
@@ -90,18 +76,15 @@ const ForgetPassword = () => {
           </VStack>
           <Box style={styles.container}>
             <VStack p={10}>
-             
-              <TouchableOpacity
-                disabled={isLoading}
-                style={styles.loginButton}
-                onPress={handleSubmit}>
-                {isLoading ? (
-                  <Spinner size="small" />
-                ) : (
-                  <Text style={styles.btnText}>Forget Password</Text>
-                )}
-              </TouchableOpacity>
-            </VStack>          
+              <CustomButton
+                action={() => {
+                  console.log('ss');
+                }}
+                backgroundColor={colors.primary}
+                text="Forgot Password"
+                textColor={colors.white}
+              />
+            </VStack>
           </Box>
         </Box>
       </SafeAreaView>
@@ -136,7 +119,7 @@ const styles = StyleSheet.create({
     minHeight: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf:'center'
+    alignSelf: 'center',
   },
   forgotPassword: {
     color: '#005DAA',

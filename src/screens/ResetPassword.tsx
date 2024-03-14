@@ -6,39 +6,24 @@ import {
   Image as ImageView,
   Dimensions,
   StyleSheet,
-  TouchableOpacity,
-  Platform,
+
   
 } from 'react-native';
 import Icon from '../components/IconPack';
-import {AlertCircle} from 'lucide-react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-
+import CustomButton from '../components/Button';
+import {colors} from '../styles/colors';
 import {
-  Checkbox,
-  CheckboxIndicator,
-  CheckboxIcon,
-  CheckboxLabel,
-  Button,
   Text,
   Box,
-  Image,
   VStack,
   Input,
   InputField,
   InputSlot,
-  HStack,
-  ScrollView,
-  Modal,
-  ModalBackdrop,
-  KeyboardAvoidingView,
-  Spinner,
-  InputIcon,Heading
- 
+ Heading
 } from '@gluestack-ui/themed';
-import {Mail} from 'lucide-react-native';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
 
@@ -111,16 +96,15 @@ const ResetPassword = () => {
           <Box style={styles.container}>
             <VStack p={10}>
              
-              <TouchableOpacity
-                disabled={isLoading}
-                style={styles.loginButton}
-                onPress={handleSubmit}>
-                {isLoading ? (
-                  <Spinner size="small" />
-                ) : (
-                  <Text style={styles.btnText}>Reset Password</Text>
-                )}
-              </TouchableOpacity>
+            <CustomButton
+                action={() => {
+                  console.log('ss');
+                }}
+                backgroundColor={colors.primary}
+                text="Forgot Password"
+                textColor={colors.white}
+              />
+              
             </VStack>          
           </Box>
         </Box>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
   View,
@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
+import 'yup-phone';
+
 import Icon from '../components/IconPack';
 import {Mail, Check, AlertCircle, Lock, User2} from 'lucide-react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -52,7 +54,9 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import PhoneNumberInput from '../components/PhoneNumberInput';
 import {confirmSignUp} from 'aws-amplify/auth';
 import {generateClient} from 'aws-amplify/api';
-import { signUpUser } from "../hooks/authServices";
+import {signUpUser} from '../hooks/authServices';
+import CustomButton from '../components/Button';
+import {colors} from '../styles/colors';
 
 import {
   signUp,
@@ -67,7 +71,6 @@ import {useNavigation} from '@react-navigation/native';
 const {width, height} = Dimensions.get('window');
 
 const SignUp = () => {
-  const initialValues = {email: '', password: ''};
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [enableCheckbox, setEnableCheckbox] = useState(false);
@@ -82,14 +85,10 @@ const SignUp = () => {
   const [canResend, setCanResend] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errMsg, setErrMsg] = useState('');
+  const [acceptTerms, setAcceptTerms] = useState(false);
 
   const navigation = useNavigation();
 
-  const handleSubmit = () => {
-    // Handle signup logic here
-    console.log('Form values:');
-    navigation.navigate('Home');
-  };
   const handleState = () => {
     setShowPassword(showState => {
       return !showState;
@@ -102,10 +101,10 @@ const SignUp = () => {
     /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/;
 
   const schema = Yup.object().shape({
-    userName: Yup.string().required('Username required'),
+    userName: Yup.string().required('Name required'),
     email: Yup.string().email('Invalid email').required('Email required'),
     // phone: Yup.string().matches(phoneRegExp, 'Invalid phone'),
-    phone: Yup.string()
+    phone_number: Yup.string()
       .matches(phoneRegExp, 'Invalid phone')
       .required('Invalid phone'),
     password: Yup.string()
@@ -145,34 +144,50 @@ const SignUp = () => {
 
   // signup function is here
   async function handleSignUp(values) {
-    const fullPhoneNumber = `${countryCode}${values.phone_number.replace(/\D/g,"")}`;
-    console.log(values);
+    const fullPhoneNumber = `${selectedPhoneCode}${values.phone_number.replace(
+      /\D/g,
+      '',
+    )}`;
+    console.log('fullPhoneNumber', fullPhoneNumber);
+    console.log('values', values);
+    console.log('selectedPhoneCode', selectedPhoneCode);
+
+    //console.log(values);
     try {
       // Await the signUpUser call and capture the signUpResponse
       const signUpResponse = await signUpUser({
         username: values.email, // Assuming username is the email
         password: values.password,
         email: values.email,
-        phone_number: "+16476419995",
-        autoSignIn: { enabled: false },
+        phone_number: fullPhoneNumber,
+        autoSignIn: {enabled: false},
       });
 
-      console.log("Success", signUpResponse);
+      console.log('Success', signUpResponse);
       setUsername(values.email);
-      console.log("Username set to:", values.email);
       setIsOtpStage(true);
       navigation.navigate('OTP', {
-              phone_number: "+16476419995",
-              username: values.email,
-              lastname:values.lastname,
-              password: values.password,
-              email:values.email
-            });
+        phone_number: fullPhoneNumber,
+        username: values.userName,
+        password: values.password,
+        email: values.email,
+        acceptTerms: values.acceptTerms,
+      });
     } catch (error) {
-      console.log("Error", error);
+      console.log('Error', error);
     }
   }
-
+  useEffect(() => {
+    // Add a listener for when the component is focused
+    //handleSignOut()
+  }, []);
+  async function handleSignOut() {
+    try {
+      await signOut();
+    } catch (error) {
+      console.log('error signing out: ', error);
+    }
+  }
   return (
     <KeyboardAwareScrollView
       style={{flex: 1}}
@@ -187,10 +202,8 @@ const SignUp = () => {
           />
           <Formik
             initialValues={{
-             
               email: '',
               userName: '',
-              lastname: '',
               phone_number: '',
               password: '',
             }}
@@ -210,14 +223,14 @@ const SignUp = () => {
               <VStack space={'xl'} p={30}>
                 <Box style={[styles.container]}>
                   <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
-                    {'First Name'}
+                    {'Name'}
                   </Text>
                   <Input>
                     <InputField
                       onChangeText={handleChange('userName')}
                       onBlur={handleBlur('userName')}
                       value={values.userName}
-                      placeholder="First Name"
+                      placeholder=" Name"
                     />
                     <InputSlot pr="$3">
                       {touched.userName && errors.userName ? (
@@ -231,7 +244,7 @@ const SignUp = () => {
                     <Text color="red">{errors.userName}</Text>
                   )}
                 </Box>
-                <Box style={[styles.container]}>
+                {/* <Box style={[styles.container]}>
                   <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
                     {'Last Name'}
                   </Text>
@@ -253,7 +266,7 @@ const SignUp = () => {
                   {touched.lastname && errors.lastname && (
                     <Text color="red">{errors.lastname}</Text>
                   )}
-                </Box>
+                </Box> */}
                 <Box style={[styles.container]}>
                   <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
                     {'Email'}
@@ -330,10 +343,10 @@ const SignUp = () => {
                         )}
                       </InputSlot>
                     </Input>
-                    {touched.phone_number && errors.phone_number && (
-                      <Text color="red">{errors.phone_number}</Text>
-                    )}
                   </HStack>
+                  {touched.phone_number && errors.phone_number && (
+                    <Text color="red">{errors.phone_number}</Text>
+                  )}
                 </Box>
                 <Box style={[styles.container]}>
                   <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
@@ -363,41 +376,55 @@ const SignUp = () => {
                     <Text color="red">{errors.password}</Text>
                   )}
                 </Box>
-                <Checkbox
-                  value="Eng"
-                  aria-label="Close"
-                  size="sm"
-                  // isChecked={field.value}
-                >
-                  <CheckboxIndicator borderColor="#C9C9C9" mr="$2">
-                    <CheckboxIcon as={Check} backgroundColor="#008000" />
-                  </CheckboxIndicator>
-                  <CheckboxLabel style={{color: '#005DAA', fontSize: 14}}>
-                    Accept our Terms & Conditions to continue
-                  </CheckboxLabel>
-                </Checkbox>
+                <Field name="acceptTerms" type="checkbox">
+                  {({field}: {field: any}) => (
+                    <Checkbox
+                      value="Eng"
+                      aria-label="Close"
+                      size="sm"
+                      style={{paddingVertical: height / 68}}
+                      isInvalid={false}
+                      // isChecked={field.value}
+
+                      onChange={() =>
+                        setFieldValue('acceptTerms', !field.value)
+                      }>
+                      <CheckboxIndicator borderColor="#C9C9C9" mr="$2">
+                        <CheckboxIcon as={Check} backgroundColor="#008000" />
+                      </CheckboxIndicator>
+                      <CheckboxLabel style={{color: '#3948AA', fontSize: 14}}>
+                        Accept our Terms & Conditions to continue
+                      </CheckboxLabel>
+                    </Checkbox>
+                  )}
+                </Field>
 
                 <VStack>
-                  <TouchableOpacity
+                  <CustomButton
+                    action={() => {
+                      handleSubmit();
+                      console.log(values);
+                      handleSignUp(values);
+                    }}
+                    backgroundColor={colors.primary}
+                    text="Login"
+                    textColor={colors.white}
+                  />
+                  {/* <TouchableOpacity
                     disabled={isLoading}
                     style={styles.loginButton}
                     onPress={() => {
                       handleSubmit();
-                      handleSignUp(values)
-                      // signUpUser({
-                      //   username: handleChangeSpace(values.email),
-                      //   password: handleChangeSpace(values.password),
-                      //   email: handleChangeSpace(values.email),
-                      //   phone_number: handleChangeSpace(values.phone_number),
-                        
-                      // });
+                      console.log(values);
+                    
+                    handleSignUp(values)                     
                     }}>
                     {isLoading ? (
                       <Spinner size="small" />
                     ) : (
                       <Text style={styles.btnText}>SingUp</Text>
                     )}
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </VStack>
               </VStack>
             )}

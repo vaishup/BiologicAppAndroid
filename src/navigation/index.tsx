@@ -1,3 +1,5 @@
+import {useState, createContext, useContext} from 'react';
+import * as React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
@@ -32,22 +34,73 @@ export type NavigationParams = {
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
+interface AuthContextProps {
+  isUserAuth: boolean;
+  setIsUserAuth: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const initialAuthState = false;
+
+const AuthContext = createContext<AuthContextProps>({
+  isUserAuth: initialAuthState,
+  setIsUserAuth: () => {},
+});
+// @ts-ignore
+const AuthProvider: React.FC = ({children}) => {
+  const [isUserAuth, setIsUserAuth] = useState<boolean>(initialAuthState);
+
+  const contextValue: AuthContextProps = {
+    isUserAuth,
+    setIsUserAuth,
+  };
+  return (
+    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+  );
+};
+
+const useAuth = (): AuthContextProps => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+export {AuthProvider, useAuth};
 
 const Root = () => {
+  const newUser = true;
+  //if user is not authenticated, show login/sign up
+  const {isUserAuth} = useAuth();
+
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}>
-        <Stack.Screen name="Welcome" component={HOC(Welcome)} />
-        <Stack.Screen name="SignUp" component={HOC(SignUp)} />
-        <Stack.Screen name="OTP" component={HOC(OTP)} />
-        <Stack.Screen name="Login" component={HOC(Login)} />
-        <Stack.Screen name="ForgetPassword" component={HOC(ForgetPassword)} />
-        <Stack.Screen name="ResetPassword" component={HOC(ResetPassword)} />
+      {!isUserAuth ? (
+        <>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+            }}>
+            {newUser && !isUserAuth ? (
+              <Stack.Screen name="Welcome" component={HOC(Welcome)} />
+            ) : (
+              <></>
+            )}
+
+            <Stack.Screen name="SignUp" component={HOC(SignUp)} />
+            <Stack.Screen name="OTP" component={HOC(OTP)} />
+            <Stack.Screen name="Login" component={HOC(Login)} />
+            <Stack.Screen
+              name="ForgetPassword"
+              component={HOC(ForgetPassword)}
+            />
+            <Stack.Screen name="ResetPassword" component={HOC(ResetPassword)} />
+            <Stack.Screen name="DrawNavigator" component={DrawNavigator} />
+
+          </Stack.Navigator>
+        </>
+      ) : (
         <Stack.Screen name="DrawNavigator" component={DrawNavigator} />
-      </Stack.Navigator>
+      )}
     </NavigationContainer>
   );
 };

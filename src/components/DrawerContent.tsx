@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Dimensions, TouchableOpacity, StyleSheet} from 'react-native';
 import {
   Box,
@@ -9,9 +9,11 @@ import {
   Text,
   VStack,
 } from '@gluestack-ui/themed';
+import { getFullName, getUserInfo } from '../hooks/authServices';
 
 import Icon from './IconPack';
 import {colors} from '../styles/colors';
+import {signOut} from 'aws-amplify/auth';
 
 const dummyData = {
   username: 'Sherman',
@@ -35,7 +37,41 @@ const drawerItems: DrawerItemData[] = [
 
 const DrawerContent = ({navigation}: {navigation: any}) => {
   const [user, setUser] = useState(dummyData);
+  const [fullName, setFullName] = useState("Loading...");
 
+  useEffect(() => {
+    const fetchFullName = async () => {
+      const userInfo = await getUserInfo();
+      console.log(userInfo?.name);
+      
+      if (userInfo) {
+        setFullName(userInfo.name); 
+        setUser({...user,
+        username: userInfo?.name,
+        email:userInfo?.email
+        });      
+        // Update the state with the fetched full name
+      } else {
+        setFullName("User");
+        setUser({
+          ...user,
+          username: userInfo?.name,
+          email:userInfo?.email
+        });
+         // Fallback name in case of an error or if name is not found
+      }
+    };
+    fetchFullName();
+
+  }, []);
+  async function handleSignOut() {
+    try {
+      await signOut();
+      navigation.navigate("Welcome");
+    } catch (error) {
+      console.log('error signing out: ', error);
+    }
+  }
   return (
     <SafeAreaView backgroundColor={colors.primary}>
       <ScrollView height="$full">
@@ -74,7 +110,7 @@ const DrawerContent = ({navigation}: {navigation: any}) => {
             </TouchableOpacity>
           ))}
 
-          <TouchableOpacity onPress={() => console.log('Sign Out')}>
+          <TouchableOpacity onPress={() => handleSignOut()}>
             <HStack height="auto" space="md" alignItems="center">
               <Icon type={'signOut'} size={25} />
               <Text color="white">Sign Out</Text>
