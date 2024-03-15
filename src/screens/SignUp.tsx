@@ -71,21 +71,11 @@ import {useNavigation} from '@react-navigation/native';
 const {width, height} = Dimensions.get('window');
 
 const SignUp = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [enableCheckbox, setEnableCheckbox] = useState(false);
   const [selectedPhoneCode, setSelectedPhoneCode] = useState('+234'); // Default selected phone code
   const [isOtpStage, setIsOtpStage] = useState(false);
   const [username, setUsername] = useState('');
-  const [otpError, setOtpError] = useState('');
-  const API = generateClient();
-  const [hasAgreed, setHasAgreed] = useState(false);
-  const [countryCode, setCountryCode] = useState('+1');
-  const [tableID, setTableID] = useState('');
-  const [canResend, setCanResend] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [errMsg, setErrMsg] = useState('');
-  const [acceptTerms, setAcceptTerms] = useState(false);
+
 
   const navigation = useNavigation();
 
@@ -162,7 +152,6 @@ const SignUp = () => {
         phone_number: fullPhoneNumber,
         autoSignIn: {enabled: false},
       });
-
       console.log('Success', signUpResponse);
       setUsername(values.email);
       setIsOtpStage(true);
@@ -384,8 +373,6 @@ const SignUp = () => {
                       size="sm"
                       style={{paddingVertical: height / 68}}
                       isInvalid={false}
-                      // isChecked={field.value}
-
                       onChange={() =>
                         setFieldValue('acceptTerms', !field.value)
                       }>
@@ -403,28 +390,12 @@ const SignUp = () => {
                   <CustomButton
                     action={() => {
                       handleSubmit();
-                      console.log(values);
                       handleSignUp(values);
                     }}
                     backgroundColor={colors.primary}
-                    text="Login"
+                    text="Sign Up"
                     textColor={colors.white}
                   />
-                  {/* <TouchableOpacity
-                    disabled={isLoading}
-                    style={styles.loginButton}
-                    onPress={() => {
-                      handleSubmit();
-                      console.log(values);
-                    
-                    handleSignUp(values)                     
-                    }}>
-                    {isLoading ? (
-                      <Spinner size="small" />
-                    ) : (
-                      <Text style={styles.btnText}>SingUp</Text>
-                    )}
-                  </TouchableOpacity> */}
                 </VStack>
               </VStack>
             )}

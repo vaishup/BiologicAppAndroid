@@ -81,8 +81,9 @@ const Root = () => {
               headerShown: false,
             }}>
             {newUser && !isUserAuth ? (
-              <Stack.Screen name="Welcome" component={HOC(Welcome)} />
-            ) : (
+              
+              <Stack.Screen name="ResetPassword" component={HOC(ResetPassword)} />
+              ) : (
               <></>
             )}
 
@@ -93,7 +94,6 @@ const Root = () => {
               name="ForgetPassword"
               component={HOC(ForgetPassword)}
             />
-            <Stack.Screen name="ResetPassword" component={HOC(ResetPassword)} />
             <Stack.Screen name="DrawNavigator" component={DrawNavigator} />
 
           </Stack.Navigator>

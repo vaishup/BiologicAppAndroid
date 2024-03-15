@@ -9,6 +9,8 @@ export const colors = {
   light: '#f8f9fa',
   dark: '#343a40',
   daryGray: "#333333",
-  white:'#ffffff'
+  white:'#ffffff',
+  yellow:'#e6bb00'
+  
   // Add more colors as needed
 };

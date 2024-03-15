@@ -6,15 +6,14 @@ import {
   Image as ImageView,
   Dimensions,
   StyleSheet,
-
-  
 } from 'react-native';
 import Icon from '../components/IconPack';
 import {useNavigation, useRoute} from '@react-navigation/native';
-
+import {Formik} from 'formik';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CustomButton from '../components/Button';
 import {colors} from '../styles/colors';
+import {AlertCircle} from 'lucide-react-native';
 import {
   Text,
   Box,
@@ -22,19 +21,22 @@ import {
   Input,
   InputField,
   InputSlot,
- Heading
+  Heading,
 } from '@gluestack-ui/themed';
-
+import * as Yup from 'yup';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {confirmResetPassword, updatePassword} from 'aws-amplify/auth';
 
 const {width, height} = Dimensions.get('window');
 
 const ResetPassword = () => {
-  const initialValues = {email: '', password: ''};
-  const [isLoading, setIsLoading] = useState(false);
+  const route = useRoute();
+  const name = route.params?.email;
+  const email = route.params?.email;
+  const code = route.params?.code;
   const [showPassword, setShowPassword] = useState(false);
   //const navigation = useNavigation<ScreenType>();
-  const navigation = useNavigation();
+  const navigation = useNavigation()
 
   const handleSubmit = () => {
     // Handle signup logic here
@@ -45,7 +47,41 @@ const ResetPassword = () => {
       return !showState;
     });
   };
+  const handleEyeState = () => {
+    setShowPassword(showState => {
+      return !showState;
+    });
+  };
+  async function handleConfirmResetPassword({
+    username,
+    confirmationCode,
+    newPassword,
+  }) {
+    try {
+      await confirmResetPassword({username, confirmationCode, newPassword});
+      console.log('its updated..');
+      navigation.navigate('DrawNavigator');
+    } catch (error) {
+      console.log('error ResetPwd in', error);
+      const message = error.toString().split(':').pop().trim();
+    }
+  }
 
+  const handleChangeSpace = (newString: string) => {
+    const textWithoutSpaces = newString.replace(/\s+/g, '');
+    return textWithoutSpaces;
+  };
+  const passPass =
+    /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/;
+
+  const schema = Yup.object().shape({
+    newPassword: Yup.string()
+      .matches(passPass, 'Password should be alphanumeric (a-z, A-Z, 0-9)')
+      .required('Password should be alphanumeric (a-z, A-Z, 0-9)'),
+      confirmPassword: Yup.string()
+      .matches(passPass, 'Password should be alphanumeric (a-z, A-Z, 0-9)')
+      .required('Password should be alphanumeric (a-z, A-Z, 0-9)'),
+  });
   return (
     <KeyboardAwareScrollView
       style={{flex: 1}}
@@ -58,54 +94,109 @@ const ResetPassword = () => {
             source={require('../assets/logo_withName.png')}
             style={styles.imageStyle}
           />
-<Heading color='#005DAA' justifyContent='center' alignSelf='center'>Reset  Password</Heading>
-
-          <VStack space={'xl'} p={30}>
-            <Box style={[styles.container]}>
-              <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
-                {'New Password'}
-              </Text>
-              <Input style={{borderRadius: 5, height: 45}}>
-                <InputField type={showPassword ? 'text' : 'password'} placeholder='New Password' />
-                <InputSlot pr="$3" onPress={handleState}>
-                  <Icon
-                    type={showPassword ? 'eye' : 'eyeOff'}
-                    color={'#C9C9C9'}
-                  />
-                </InputSlot>
-              </Input>
-            </Box>
-            <Box style={[styles.container]}>
-              <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
-                {'Confirm Password'}
-              </Text>
-              <Input style={{borderRadius: 5, height: 45}}>
-                <InputField type={showPassword ? 'text' : 'password'} placeholder='Confirm Password' />
-                <InputSlot pr="$3" onPress={handleState}>
-                  <Icon
-                    type={showPassword ? 'eye' : 'eyeOff'}
-                    color={'#C9C9C9'}
-                  />
-                </InputSlot>
-              </Input>
-            </Box>
-          </VStack>
-          <VStack space={'xl'} p={30}>
-            
-          </VStack>
-          <Box style={styles.container}>
-            <VStack p={10}>
-             
-            <CustomButton
-                action={() => {
-                  console.log('ss');
-                }}
-                backgroundColor={colors.primary}
-                text="Forgot Password"
-                textColor={colors.white}
-              />
+          <Heading color="#005DAA" justifyContent="center" alignSelf="center">
+            Reset Password
+          </Heading>
+          <Formik
+            initialValues={{
+              newPassword: '',
+              confirmPassword: '',
+              passwordMatch:'',
+            }}
+            validationSchema={schema}
+            onSubmit={(values, { setErrors }) => {
+              if (values.newPassword !== values.confirmPassword) {
+                setErrors({
+                  passwordMatch: 'Passwords do not match',
+                });
+                return;
+              }
+            }}>
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+            }) => (
+              <VStack
+                space={errors.newPassword || errors.confirmPassword ? 'sm' : 'xl'}
+                p={30}>
+                <Box style={[styles.container]}>
+                  <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
+                    {'New Password'}
+                  </Text>
+                  <Input>
+                    <InputField
+                      onChangeText={text => {
+                        handleChange('newPassword')(text);
+                      }}
+                      onBlur={handleBlur('newPassword')}
+                      value={handleChangeSpace(values.newPassword)}
+                      placeholder="New password"
+                      placeholderTextColor={'#a6a6a6'}
+                    />
+                    <InputSlot pr="$3" onPress={handleState}>
+                      {touched.newPassword && errors.newPassword ? (
+                        <AlertCircle color={'red'} size={27} />
+                      ) : (
+                        <Icon
+                          type={showPassword ? 'eye' : 'eyeOff'}
+                          color={'#C9C9C9'}
+                        />
+                      )}
+                    </InputSlot>
+                  </Input>
+                  {touched.newPassword && errors.newPassword && (
+                    <Text color="red">{errors.newPassword}</Text>
+                  )}
+                </Box>
+                <Box style={[styles.container]}>
+                  <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
+                    {'Confirm Password'}
+                  </Text>
+                  <Input>
+                    <InputField
+                      onChangeText={text => {
+                        handleChange('confirmPassword')(text);
+                      }}
+                      onBlur={handleBlur('confirmPassword')}
+                      value={handleChangeSpace(values.confirmPassword)}
+                      placeholder="Confirm Password"
+                      placeholderTextColor={'#a6a6a6'}
+                    />
+                    <InputSlot pr="$3" onPress={handleEyeState}>
+                      {touched.confirmPassword && errors.confirmPassword ? (
+                        <AlertCircle color={'red'} size={27} />
+                      ) : (
+                        <Icon
+                          type={showPassword ? 'eye' : 'eyeOff'}
+                          color={'#C9C9C9'}
+                        />
+                      )}
+                    </InputSlot>
+                  </Input>
+                  {touched.confirmPassword && errors.confirmPassword && (
+                    <Text color="red">{errors.confirmPassword}</Text>
+                  )}
+                </Box>
+                <CustomButton
+                  action={() => {
+                    handleSubmit();
               
-            </VStack>          
+                    //handleConfirmResetPassword(name, code, values.confirmPassword);
+                  }}
+                  backgroundColor={colors.primary}
+                  text="Forgot Password"
+                  textColor={colors.white}
+                />
+              </VStack>
+            )}
+          </Formik>
+          <VStack space={'xl'} p={30}></VStack>
+          <Box style={styles.container}>
+            <VStack p={10}></VStack>
           </Box>
         </Box>
       </SafeAreaView>
@@ -140,7 +231,7 @@ const styles = StyleSheet.create({
     minHeight: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    alignSelf:'center'
+    alignSelf: 'center',
   },
 
   forgotPassword: {

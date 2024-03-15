@@ -11,7 +11,10 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CustomButton from '../components/Button';
 import {colors} from '../styles/colors';
-
+import {AuthUser} from 'aws-amplify/auth';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
+import Icon from '../components/IconPack';
 import {
   Text,
   Box,
@@ -22,28 +25,62 @@ import {
   Spinner,
   Heading,
 } from '@gluestack-ui/themed';
-import {Mail} from 'lucide-react-native';
+import {Mail, AlertCircle} from 'lucide-react-native';
+import {resetPassword} from 'aws-amplify/auth';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 const {width, height} = Dimensions.get('window');
 
 const ForgetPassword = () => {
-  const initialValues = {email: '', password: ''};
-  const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const navigation = useNavigation<ScreenType>();
+  const [email, setEmail] = useState('');
+  const navigation = useNavigation();
 
   const handleSubmit = () => {
     // Handle signup logic here
     console.log('Form values:');
-    navigation.navigate('ResetPassword');
+    //navigation.navigate('ResetPassword');
   };
-  const handleState = () => {
-    setShowPassword(showState => {
-      return !showState;
-    });
-  };
+
+  const schema = Yup.object().shape({
+    // email: Yup.string().email('Invalid email').required('Invalid email'),
+    email: Yup.string().email('Invalid email').required('Email required'),
+  });
+  async function handleResetPassword(username:string) {
+    try {
+      const output = await resetPassword({ username });
+      console.log("nexStep", output);
+      handleResetPasswordNextSteps(output,username);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  
+  function handleResetPasswordNextSteps(output:any,username:string) {
+    const { nextStep } = output;
+    console.log("nexStep", nextStep);   
+    switch (nextStep.resetPasswordStep) {
+      case 'CONFIRM_RESET_PASSWORD_WITH_CODE':
+        const codeDeliveryDetails = nextStep.codeDeliveryDetails;
+        console.log(
+          `Confirmation code was sent to ${codeDeliveryDetails.deliveryMedium}`
+        );
+        navigation.navigate('OTP', {
+          forgetPassword: true,
+          username: username,
+        });
+        
+        // Collect the confirmation code from the user and pass to confirmResetPassword.
+        break;
+      case 'DONE':
+        console.log('Successfully reset password.');
+        break;
+    }
+    // navigation.navigate('OTP', {
+    //   forgetPassword: true,
+    //   username:email,
+    // });
+  }
 
   return (
     <KeyboardAwareScrollView
@@ -60,32 +97,62 @@ const ForgetPassword = () => {
           <Heading color="#005DAA" justifyContent="center" alignSelf="center">
             Forget Password
           </Heading>
-
-          <VStack space={'xl'} p={30}>
-            <Box style={[styles.container]}>
-              <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
-                {'Email'}
-              </Text>
-              <Input style={{borderRadius: 5, height: 45}}>
-                <InputField placeholder="Email" />
-                <InputSlot pr="$3">
-                  <Mail color={'#C9C9C9'} size={27} />
-                </InputSlot>
-              </Input>
-            </Box>
-          </VStack>
-          <Box style={styles.container}>
-            <VStack p={10}>
-              <CustomButton
-                action={() => {
-                  console.log('ss');
-                }}
-                backgroundColor={colors.primary}
-                text="Forgot Password"
-                textColor={colors.white}
-              />
-            </VStack>
-          </Box>
+          <Formik
+            initialValues={{email: ''}}
+            validationSchema={schema}
+            onSubmit={values => {
+              setEmail(values.email);
+              console.log(values);
+            }}>
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+              setFieldValue,
+            }) => (
+              <VStack space={errors.email ? 'sm' : 'xl'} p={30}>
+                <Box style={[styles.container]}>
+                  <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
+                    {'Email'}
+                  </Text>
+                  <Input>
+                    <InputField
+                      onChangeText={handleChange('email')}
+                      onBlur={handleBlur('email')}
+                      value={values.email}
+                      placeholder="Email"
+                    />
+                    <InputSlot pr="$3">
+                      {touched.email && errors.email ? (
+                        <AlertCircle color={'red'} size={27} />
+                      ) : (
+                        <Icon color={'#C9C9C9'} size={27} type={'mail'} />
+                      )}
+                    </InputSlot>
+                  </Input>
+                  {touched.email && errors.email && (
+                    <Text color="red">{errors.email}</Text>
+                  )}
+                </Box>
+                <CustomButton
+                  action={() => {
+                    handleSubmit();
+                     handleResetPassword(values.email)
+                    // navigation.navigate('OTP', {
+                    //   forgetPassword: true,
+                    //   username: values.email,
+                    // });
+                  }}
+                  backgroundColor={colors.primary}
+                  text="Forgot Password"
+                  textColor={colors.white}
+                />
+              </VStack>
+            )}
+          </Formik>
         </Box>
       </SafeAreaView>
     </KeyboardAwareScrollView>

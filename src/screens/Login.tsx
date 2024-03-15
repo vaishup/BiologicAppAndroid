@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {useRoute} from '@react-navigation/native';
 
 import {
   Image as ImageView,
@@ -39,6 +40,8 @@ const Login = () => {
   const [isError, setIsError] = useState(false);
   const [errMsg, setErrMsg] = useState('');
   const {setIsUserAuth} = useAuth();
+  const route = useRoute();
+
 
   const schema = Yup.object().shape({
     email: Yup.string()
@@ -104,18 +107,10 @@ const Login = () => {
             validationSchema={schema}
             onSubmit={values => {
               console.log('sss');
-
               setUserName(values.email);
               setPassword(values.password);
               console.log(values);
-              console.log(
-                'Changed value',
-                usernameInput,
-                passwordInput,
-
-                values.email,
-                values.password,
-              );
+              console.log( 'Changed value',usernameInput, passwordInput,  values.email,values.password, );
             }}>
             {({
               handleChange,
