@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Box,
-  ScrollView,
-  Text,
-  VStack,
-  Button,
-  Heading,
-} from '@gluestack-ui/themed';
+import {ScrollView, Text, VStack, Heading} from '@gluestack-ui/themed';
 import {Dimensions, StyleSheet, Image as ImageView} from 'react-native';
 import {useRoute} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
@@ -30,9 +23,6 @@ const OTP = ({phone}: OTPProps) => {
   const password = route.params?.password;
   const email = route.params?.email;
   const acceptTerms = route.params?.acceptTerms;
-console.log("email", email);
-console.log("username", username);
-
   const forgetPassword = route.params?.forgetPassword;
 
   return (

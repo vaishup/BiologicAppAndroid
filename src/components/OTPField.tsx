@@ -1,16 +1,13 @@
-import {useEffect, useRef, useState} from 'react';
-import {HStack, Box, Text, Spinner, VStack} from '@gluestack-ui/themed';
+import {useEffect, useState} from 'react';
+import {HStack, Box, Text, VStack} from '@gluestack-ui/themed';
 import Icon from './IconPack';
 import {
-  Alert,
-  Keyboard,
   StyleProp,
   ViewStyle,
   Dimensions,
-  TouchableOpacity,
+
   StyleSheet,
 } from 'react-native';
-// import { Auth } from 'aws-amplify';
 import {useNavigation} from '@react-navigation/native';
 import {OtpInput} from 'react-native-otp-entry';
 import {confirmSignUp} from 'aws-amplify/auth';
@@ -18,26 +15,9 @@ import {resendSignUpCode} from 'aws-amplify/auth';
 import * as mutations from '../graphql/mutations';
 import CustomButton from '../components/Button';
 import {colors} from '../styles/colors';
-import { resetPassword } from 'aws-amplify/auth';
-
-import {
-  signUp,
-  signIn,
-  fetchUserAttributes,
-  getCurrentUser,
-  updateUserAttributes,
-  updateUserAttribute,
-  signOut,
-} from '@aws-amplify/auth';
+import {signIn, getCurrentUser, updateUserAttribute} from '@aws-amplify/auth';
 import {generateClient} from 'aws-amplify/api';
-
 import {useAuth} from '../navigation';
-/* 
-
-style: Custom style of input wrapper (e.g. {{padding: 10}})
-username: Pass by sign up page
-code: Pass by sign up page
-*/
 
 interface inputProps {
   style?: StyleProp<ViewStyle>;
@@ -47,15 +27,15 @@ interface inputProps {
   password: string;
   code?: string;
   acceptTerms?: boolean;
- forgetPassword: boolean;
+  forgetPassword: boolean;
   isResetPassword?: Boolean;
 }
 const {height} = Dimensions.get('window');
 
 const OTPField = (props: inputProps) => {
   const OTP = () => {
-  const forgetPassword = props?.forgetPassword;
-   
+    // const variables
+    const forgetPassword = props?.forgetPassword;
     const isResetPassword = props?.isResetPassword;
     const [err, setErr] = useState(false);
     const [enterCode, setEnterCode] = useState('');
@@ -63,16 +43,16 @@ const OTPField = (props: inputProps) => {
     const [num, setNum] = useState('0');
     const [resendCheck, setResendCheck] = useState(true);
     const {setIsUserAuth} = useAuth();
-
     const navigation = useNavigation();
     const {height} = Dimensions.get('window');
-    const [email, setEmail] = useState('');;
+    const [email, setEmail] = useState('');
     const [otpError, setOtpError] = useState('');
     const API = generateClient();
     const [acceptTerms, setAcceptTerms] = useState(false);
     const [tableID, setTableID] = useState('');
+    
     useEffect(() => {
-      setEmail(props.email)
+      setEmail(props.email);
       const timer =
         counter > 0 && setInterval(() => setCounter(counter - 1), 1000);
       if (counter == 0) {
@@ -104,18 +84,19 @@ const OTPField = (props: inputProps) => {
         console.error('Error updating user attributes:', error);
       }
     }
-    const handleResendCode = async ({ email, username }) => {
-      console.log(email, "email");
+    //------------------AWS auth amplify resend and otp submit functions-------------------------
+    const handleResendCode = async ({email, username}) => {
+      console.log(email, 'email');
       try {
-        const { destination, deliveryMedium, attributeName } = 
-        await resendSignUpCode({ username });
+        const {destination, deliveryMedium, attributeName} =
+          await resendSignUpCode({username});
         console.log(destination, deliveryMedium, attributeName);
       } catch (error) {
         console.log('error signing in', error);
         const message = error.toString().split(':').pop().trim();
       }
-    }
-  
+    };
+
     const handleOtpSubmit = async (username: string, code: string) => {
       try {
         const response = await confirmSignUp({
@@ -159,8 +140,7 @@ const OTPField = (props: inputProps) => {
         setOtpError('Failed to verify OTP. Please try again.');
       }
     };
-  
-  
+
     return (
       <VStack style={styles.container} justifyContent="space-between">
         <HStack
@@ -198,19 +178,6 @@ const OTPField = (props: inputProps) => {
             </Text>
           )}
 
-          {/* <Box style={{alignItems: 'center', marginVertical: 10}}>
-            <Button
-              title="Resend Code"
-              isDisabled={resendCheck}
-              btnStyle={{backgroundColor: '#E4962F'}}
-              action={() => {
-                resendConfirmationCode(props.username);
-                if (counter == 0) {
-                  setCounter(59);
-                  setResendCheck(true);
-                }
-              }}></Button>
-          </Box> */}
           <VStack space="md">
             <HStack style={styles.timeCounter}>
               <Text style={{color: '#3948AA'}}>
@@ -221,10 +188,11 @@ const OTPField = (props: inputProps) => {
             </HStack>
             <CustomButton
               action={() => {
-                // console.log("prpos.email.", props.email);
-                // console.log("prpos.email.", props.username);
-                
-                handleResendCode({ email: 'fdf@gmail.com', username: 'someUsername' })              }}
+                 handleResendCode({
+                  email: 'fdf@gmail.com',
+                  username: 'someUsername',
+                });
+              }}
               backgroundColor={colors.yellow}
               text="Resend OTP!"
               textColor={colors.white}
@@ -232,12 +200,10 @@ const OTPField = (props: inputProps) => {
             <CustomButton
               action={() => {
                 if (forgetPassword) {
-                  console.log("email", props.username);
-                
                   navigation.navigate('ResetPassword', {
                     forgetPassword: true,
                     email: props.username,
-                    code: enterCode
+                    code: enterCode,
                   });
                 } else {
                   handleOtpSubmit(props.email, enterCode);
@@ -248,30 +214,6 @@ const OTPField = (props: inputProps) => {
               textColor={colors.white}
             />
           </VStack>
-
-          {/* <Button
-              title="It's Really Me!"
-              action={() => {
-                // Confirm sign-up from server
-                // If success, navigate to home
-                // Otherwise, show err message
-                console.log('otp code', enterCode);
-                console.log('Forge', forgetPassword, enterCode);
-                forgetPassword
-                  ? navigation.navigate('Resetpwd', {
-                      code: enterCode,
-                      username: props.username,
-                    })
-                  : isResetPassword
-                  ? navigation.navigate('SettingResetPwdConfirm', {
-                      code: enterCode,
-                      username: props.username,
-                      phone: phoneNum,
-                    })
-                  : socialSignUp === true
-                  ? confirmSocialSignUp(props.username, enterCode)
-                  : confirmSignUp(props.username, enterCode);
-              }}></Button> */}
         </VStack>
       </VStack>
     );

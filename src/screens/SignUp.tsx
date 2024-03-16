@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
 import {
-  View,
-  Text as TextView,
   Image as ImageView,
   Dimensions,
   StyleSheet,
@@ -12,7 +10,7 @@ import {
 import 'yup-phone';
 
 import Icon from '../components/IconPack';
-import {Mail, Check, AlertCircle, Lock, User2} from 'lucide-react-native';
+import {Check, AlertCircle} from 'lucide-react-native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import * as Yup from 'yup';
 import {Formik, Field} from 'formik';
@@ -22,21 +20,13 @@ import {
   CheckboxIndicator,
   CheckboxIcon,
   CheckboxLabel,
-  Button,
   Text,
   Box,
-  Image,
   VStack,
   Input,
   InputField,
   InputSlot,
   HStack,
-  ScrollView,
-  Modal,
-  ModalBackdrop,
-  KeyboardAvoidingView,
-  Spinner,
-  InputIcon,
   Select,
   SelectContent,
   SelectTrigger,
@@ -51,33 +41,21 @@ import {
   ChevronDownIcon,
 } from '@gluestack-ui/themed';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import PhoneNumberInput from '../components/PhoneNumberInput';
-import {confirmSignUp} from 'aws-amplify/auth';
-import {generateClient} from 'aws-amplify/api';
 import {signUpUser} from '../hooks/authServices';
 import CustomButton from '../components/Button';
 import {colors} from '../styles/colors';
 
-import {
-  signUp,
-  signIn,
-  fetchUserAttributes,
-  getCurrentUser,
-  updateUserAttributes,
-  updateUserAttribute,
-  signOut,
-} from '@aws-amplify/auth';
+import {signOut} from '@aws-amplify/auth';
 import {useNavigation} from '@react-navigation/native';
 const {width, height} = Dimensions.get('window');
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [selectedPhoneCode, setSelectedPhoneCode] = useState('+234'); // Default selected phone code
+  const [selectedPhoneCode, setSelectedPhoneCode] = useState('+1'); // Default selected phone code
   const [isOtpStage, setIsOtpStage] = useState(false);
   const [username, setUsername] = useState('');
-
-
   const navigation = useNavigation();
+  //------------------yup validation and password show /hide ,space functions-------------------------
 
   const handleState = () => {
     setShowPassword(showState => {
@@ -109,30 +87,8 @@ const SignUp = () => {
     const textWithoutSpaces = newString.replace(/\s+/g, '');
     return textWithoutSpaces;
   };
-  async function updateCustomAttribute(newAttributeValue) {
-    try {
-      // Assuming `getCurrentUser` returns a user object similar to what AWS Amplify Auth.currentAuthenticatedUser() would return
-      const user = await getCurrentUser();
 
-      // Construct the input object expected by `updateUserAttribute'
-      const input = {
-        userAttribute: {
-          attributeKey: 'custom:TableID', // The key of the attribute you want to update
-          value: newAttributeValue, // The new value for the custom attribute
-        },
-        options: {},
-      };
-
-      // Call `updateUserAttribute` with the constructed input
-      const result = await updateUserAttribute(input);
-
-      console.log('Attribute update result: ', result);
-    } catch (error) {
-      console.error('Error updating user attributes:', error);
-    }
-  }
-
-  // signup function is here
+  //------------------aws Amplify Signup  function---------------------------------------
   async function handleSignUp(values) {
     const fullPhoneNumber = `${selectedPhoneCode}${values.phone_number.replace(
       /\D/g,
@@ -166,17 +122,7 @@ const SignUp = () => {
       console.log('Error', error);
     }
   }
-  useEffect(() => {
-    // Add a listener for when the component is focused
-    //handleSignOut()
-  }, []);
-  async function handleSignOut() {
-    try {
-      await signOut();
-    } catch (error) {
-      console.log('error signing out: ', error);
-    }
-  }
+
   return (
     <KeyboardAwareScrollView
       style={{flex: 1}}
@@ -233,29 +179,7 @@ const SignUp = () => {
                     <Text color="red">{errors.userName}</Text>
                   )}
                 </Box>
-                {/* <Box style={[styles.container]}>
-                  <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
-                    {'Last Name'}
-                  </Text>
-                  <Input>
-                    <InputField
-                      onChangeText={handleChange('lastname')}
-                      onBlur={handleBlur('lastname')}
-                      value={values.lastname}
-                      placeholder="Last Name"
-                    />
-                    <InputSlot pr="$3">
-                      {touched.lastname && errors.lastname ? (
-                        <AlertCircle color={'red'} size={27} />
-                      ) : (
-                        <Icon color={'#C9C9C9'} size={27} type={'user'} />
-                      )}
-                    </InputSlot>
-                  </Input>
-                  {touched.lastname && errors.lastname && (
-                    <Text color="red">{errors.lastname}</Text>
-                  )}
-                </Box> */}
+
                 <Box style={[styles.container]}>
                   <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
                     {'Email'}
@@ -419,7 +343,6 @@ const SignUp = () => {
 const styles = StyleSheet.create({
   imageStyle: {
     height: height / 4.9,
-    // PixelRatio.getPixelSizeForLayoutSize(110)
     width: '90%',
     justifyContent: 'center',
     alignSelf: 'center', // top: 25,

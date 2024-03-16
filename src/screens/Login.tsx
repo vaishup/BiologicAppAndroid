@@ -27,12 +27,11 @@ import {
   Spinner,
 } from '@gluestack-ui/themed';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {signIn, signOut} from 'aws-amplify/auth';
+import {signIn} from 'aws-amplify/auth';
 import {useAuth} from '../navigation';
 const {width, height} = Dimensions.get('window');
 
 const Login = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
   const [usernameInput, setUserName] = useState('');
@@ -42,7 +41,7 @@ const Login = () => {
   const {setIsUserAuth} = useAuth();
   const route = useRoute();
 
-
+  //------------------yup validation and password show /hide functions-------------------------
   const schema = Yup.object().shape({
     email: Yup.string()
       .email('Invalid email format')
@@ -58,18 +57,7 @@ const Login = () => {
     const textWithoutSpaces = newString.replace(/\s+/g, '');
     return textWithoutSpaces;
   };
-  useEffect(() => {
-    // Add a listener for when the component is focused
-    // handleSignOut();
-    // console.log("ss");
-  }, []);
-  async function handleSignOut() {
-    try {
-      await signOut();
-    } catch (error) {
-      console.log('error signing out: ', error);
-    }
-  }
+  //------------------AWS auth amplify userSignIn functions-------------------------
   async function userSignIn({username2, password2}) {
     try {
       const {isSignedIn} = await signIn({
@@ -110,7 +98,13 @@ const Login = () => {
               setUserName(values.email);
               setPassword(values.password);
               console.log(values);
-              console.log( 'Changed value',usernameInput, passwordInput,  values.email,values.password, );
+              console.log(
+                'Changed value',
+                usernameInput,
+                passwordInput,
+                values.email,
+                values.password,
+              );
             }}>
             {({
               handleChange,
@@ -184,9 +178,7 @@ const Login = () => {
                     }}>
                     <Text style={styles.forgotPassword}>Forgot Password?</Text>
                   </TouchableOpacity>
-                  {/* {isLoading ? (
-                      <Spinner size="small" />
-                      ) : ( */}
+
                   <CustomButton
                     action={() => {
                       handleSubmit();
@@ -199,22 +191,12 @@ const Login = () => {
                     text="Login"
                     textColor={colors.white}
                   />
-                  {/* )} */}
+
                   {isError && (
                     <Box style={{alignSelf: 'center', marginTop: 10}}>
                       <Text style={{color: 'red'}}>{errMsg}</Text>
                     </Box>
                   )}
-                  {/* <TouchableOpacity
-                    disabled={isLoading}
-                    style={styles.loginButton}
-                    >
-                    {isLoading ? (
-                      <Spinner size="small" />
-                    ) : (
-                      <Text style={styles.btnText}>Login</Text>
-                    )}
-                  </TouchableOpacity> */}
                 </VStack>
               </VStack>
             )}

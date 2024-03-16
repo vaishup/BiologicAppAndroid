@@ -1,11 +1,6 @@
 import React, {useState} from 'react';
 
-import {
-  Text as TextView,
-  Image as ImageView,
-  Dimensions,
-  StyleSheet,
-} from 'react-native';
+import {Image as ImageView, Dimensions, StyleSheet} from 'react-native';
 
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
@@ -34,42 +29,48 @@ const {width, height} = Dimensions.get('window');
 
 const ForgetPassword = () => {
   const [email, setEmail] = useState('');
+  const [isError, setIsError] = useState(false);
+  const [errMsg, setErrMsg] = useState('');
   const navigation = useNavigation();
 
-  const handleSubmit = () => {
-    // Handle signup logic here
-    console.log('Form values:');
-    //navigation.navigate('ResetPassword');
-  };
-
+  //------------------yup validation and password show /hide functions-------------------------
   const schema = Yup.object().shape({
     // email: Yup.string().email('Invalid email').required('Invalid email'),
     email: Yup.string().email('Invalid email').required('Email required'),
   });
-  async function handleResetPassword(username:string) {
+  //------------------AWS auth amplify handleResetPassword functions-------------------------
+  async function handleResetPassword(username: string) {
     try {
-      const output = await resetPassword({ username });
-      console.log("nexStep", output);
-      handleResetPasswordNextSteps(output,username);
+      const output = await resetPassword({username});
+      console.log('nexStep', output);
+      handleResetPasswordNextSteps(output, username);
     } catch (error) {
-      console.log(error);
+      console.log('error signing in', error);
+      setIsError(true);
+      const message = error.toString().split(':').pop().trim();
+      if (message === 'Username/client id combination not found.') {
+        const messages = 'User Not Found';
+        setErrMsg(messages);
+      } else {
+        setErrMsg(message);
+      }
     }
   }
-  
-  function handleResetPasswordNextSteps(output:any,username:string) {
-    const { nextStep } = output;
-    console.log("nexStep", nextStep);   
+
+  function handleResetPasswordNextSteps(output: any, username: string) {
+    const {nextStep} = output;
+    console.log('nexStep', nextStep);
     switch (nextStep.resetPasswordStep) {
       case 'CONFIRM_RESET_PASSWORD_WITH_CODE':
         const codeDeliveryDetails = nextStep.codeDeliveryDetails;
         console.log(
-          `Confirmation code was sent to ${codeDeliveryDetails.deliveryMedium}`
+          `Confirmation code was sent to ${codeDeliveryDetails.deliveryMedium}`,
         );
         navigation.navigate('OTP', {
           forgetPassword: true,
           username: username,
         });
-        
+
         // Collect the confirmation code from the user and pass to confirmResetPassword.
         break;
       case 'DONE':
@@ -140,16 +141,17 @@ const ForgetPassword = () => {
                 <CustomButton
                   action={() => {
                     handleSubmit();
-                     handleResetPassword(values.email)
-                    // navigation.navigate('OTP', {
-                    //   forgetPassword: true,
-                    //   username: values.email,
-                    // });
+                    handleResetPassword(values.email);
                   }}
                   backgroundColor={colors.primary}
                   text="Forgot Password"
                   textColor={colors.white}
                 />
+                {isError && (
+                  <Box style={{alignSelf: 'center', marginTop: 10}}>
+                    <Text style={{color: 'red'}}>{errMsg}</Text>
+                  </Box>
+                )}
               </VStack>
             )}
           </Formik>

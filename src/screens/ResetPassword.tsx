@@ -1,12 +1,6 @@
 import React, {useState} from 'react';
 
-import {
-  View,
-  Text as TextView,
-  Image as ImageView,
-  Dimensions,
-  StyleSheet,
-} from 'react-native';
+import {Image as ImageView, Dimensions, StyleSheet} from 'react-native';
 import Icon from '../components/IconPack';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {Formik} from 'formik';
@@ -34,24 +28,37 @@ const ResetPassword = () => {
   const name = route.params?.email;
   const email = route.params?.email;
   const code = route.params?.code;
+  const navigation = useNavigation();
   const [showPassword, setShowPassword] = useState(false);
-  //const navigation = useNavigation<ScreenType>();
-  const navigation = useNavigation()
-
-  const handleSubmit = () => {
-    // Handle signup logic here
-    console.log('Form values:');
-  };
+  const [confirmPassword, setConfirmassword] = useState(false);
+  //------------------yup validation and password show /hide functions-------------------------
   const handleState = () => {
     setShowPassword(showState => {
       return !showState;
     });
   };
-  const handleEyeState = () => {
-    setShowPassword(showState => {
+  const handleConfirmState = () => {
+    setConfirmassword(showState => {
       return !showState;
     });
   };
+  const handleChangeSpace = (newString: string) => {
+    const textWithoutSpaces = newString.replace(/\s+/g, '');
+    return textWithoutSpaces;
+  };
+  const passPass =
+    /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/;
+
+  const schema = Yup.object().shape({
+    newPassword: Yup.string()
+      .matches(passPass, 'Password should be alphanumeric (a-z, A-Z, 0-9)')
+      .required('Password should be alphanumeric (a-z, A-Z, 0-9)'),
+    confirmPassword: Yup.string()
+      .matches(passPass, 'Password should be alphanumeric (a-z, A-Z, 0-9)')
+      .required('Password should be alphanumeric (a-z, A-Z, 0-9)'),
+  });
+
+  //------------------AWS auth amplify handleConfirmResetPassword functions-------------------------
   async function handleConfirmResetPassword({
     username,
     confirmationCode,
@@ -66,22 +73,6 @@ const ResetPassword = () => {
       const message = error.toString().split(':').pop().trim();
     }
   }
-
-  const handleChangeSpace = (newString: string) => {
-    const textWithoutSpaces = newString.replace(/\s+/g, '');
-    return textWithoutSpaces;
-  };
-  const passPass =
-    /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})(?=.*\d)((?=.*[a-z]){1})((?=.*[A-Z]){1}).*$/;
-
-  const schema = Yup.object().shape({
-    newPassword: Yup.string()
-      .matches(passPass, 'Password should be alphanumeric (a-z, A-Z, 0-9)')
-      .required('Password should be alphanumeric (a-z, A-Z, 0-9)'),
-      confirmPassword: Yup.string()
-      .matches(passPass, 'Password should be alphanumeric (a-z, A-Z, 0-9)')
-      .required('Password should be alphanumeric (a-z, A-Z, 0-9)'),
-  });
   return (
     <KeyboardAwareScrollView
       style={{flex: 1}}
@@ -101,13 +92,12 @@ const ResetPassword = () => {
             initialValues={{
               newPassword: '',
               confirmPassword: '',
-              passwordMatch:'',
             }}
             validationSchema={schema}
-            onSubmit={(values, { setErrors }) => {
+            onSubmit={(values, {setErrors}) => {
               if (values.newPassword !== values.confirmPassword) {
                 setErrors({
-                  passwordMatch: 'Passwords do not match',
+                  confirmPassword: 'Passwords does not match',
                 });
                 return;
               }
@@ -121,7 +111,9 @@ const ResetPassword = () => {
               touched,
             }) => (
               <VStack
-                space={errors.newPassword || errors.confirmPassword ? 'sm' : 'xl'}
+                space={
+                  errors.newPassword || errors.confirmPassword ? 'sm' : 'xl'
+                }
                 p={30}>
                 <Box style={[styles.container]}>
                   <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
@@ -136,9 +128,10 @@ const ResetPassword = () => {
                       value={handleChangeSpace(values.newPassword)}
                       placeholder="New password"
                       placeholderTextColor={'#a6a6a6'}
+                      type={showPassword ? 'text' : 'password'}
                     />
                     <InputSlot pr="$3" onPress={handleState}>
-                      {touched.newPassword && errors.newPassword ? (
+                      {touched.confirmPassword && errors.confirmPassword ? (
                         <AlertCircle color={'red'} size={27} />
                       ) : (
                         <Icon
@@ -165,13 +158,14 @@ const ResetPassword = () => {
                       value={handleChangeSpace(values.confirmPassword)}
                       placeholder="Confirm Password"
                       placeholderTextColor={'#a6a6a6'}
+                      type={confirmPassword ? 'text' : 'password'}
                     />
-                    <InputSlot pr="$3" onPress={handleEyeState}>
+                    <InputSlot pr="$3" onPress={handleConfirmState}>
                       {touched.confirmPassword && errors.confirmPassword ? (
                         <AlertCircle color={'red'} size={27} />
                       ) : (
                         <Icon
-                          type={showPassword ? 'eye' : 'eyeOff'}
+                          type={confirmPassword ? 'eye' : 'eyeOff'}
                           color={'#C9C9C9'}
                         />
                       )}
@@ -184,8 +178,6 @@ const ResetPassword = () => {
                 <CustomButton
                   action={() => {
                     handleSubmit();
-              
-                    //handleConfirmResetPassword(name, code, values.confirmPassword);
                   }}
                   backgroundColor={colors.primary}
                   text="Forgot Password"
@@ -206,7 +198,6 @@ const ResetPassword = () => {
 const styles = StyleSheet.create({
   imageStyle: {
     height: height / 4.9,
-    // PixelRatio.getPixelSizeForLayoutSize(110)
     width: '90%',
     justifyContent: 'center',
     alignSelf: 'center', // top: 25,
