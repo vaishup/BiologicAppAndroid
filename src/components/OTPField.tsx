@@ -26,6 +26,7 @@ interface inputProps {
   phoneNumber: string;
   password: string;
   code?: string;
+  accountType?: string;
   acceptTerms?: boolean;
   forgetPassword: boolean;
   isResetPassword?: Boolean;
@@ -50,6 +51,8 @@ const OTPField = (props: inputProps) => {
     const API = generateClient();
     const [acceptTerms, setAcceptTerms] = useState(false);
     const [tableID, setTableID] = useState('');
+    const [errMsg, setErrMsg] = useState('');
+
     
     useEffect(() => {
       setEmail(props.email);
@@ -85,18 +88,26 @@ const OTPField = (props: inputProps) => {
       }
     }
     //------------------AWS auth amplify resend and otp submit functions-------------------------
-    const handleResendCode = async ({email, username}) => {
-      console.log(email, 'email');
+ 
+    const handleResendCode = async ({ username }) => {
+     console.log("username",username);     
       try {
-        const {destination, deliveryMedium, attributeName} =
-          await resendSignUpCode({username});
-        console.log(destination, deliveryMedium, attributeName);
-      } catch (error) {
-        console.log('error signing in', error);
-        const message = error.toString().split(':').pop().trim();
-      }
-    };
-
+      const {
+        destination,
+        deliveryMedium,
+        attributeName
+      } = await resendSignUpCode({ username });
+      console.log(destination, deliveryMedium,attributeName);
+      
+    } catch (error) {
+      console.log('error signing in', error);
+      const message = error.toString().split(':').pop().trim();
+      console.log(message);
+      setErr(true);
+      setErrMsg(message)
+      
+    }
+    }
     const handleOtpSubmit = async (username: string, code: string) => {
       try {
         const response = await confirmSignUp({
@@ -116,6 +127,8 @@ const OTPField = (props: inputProps) => {
           termsAndConditionsAccepted: acceptTerms,
           privacyPolicyAcknowledged: acceptTerms,
           indentificationVerified: false,
+         // accountType: props.accountType
+
         };
         // Call the createUserModel mutation with the input
         const createUser = await API.graphql({
@@ -189,8 +202,7 @@ const OTPField = (props: inputProps) => {
             <CustomButton
               action={() => {
                  handleResendCode({
-                  email: 'fdf@gmail.com',
-                  username: 'someUsername',
+                  username: props.username,
                 });
               }}
               backgroundColor={colors.yellow}
@@ -213,6 +225,12 @@ const OTPField = (props: inputProps) => {
               text="It's Really Me!"
               textColor={colors.white}
             />
+
+{err && (
+                    <Box style={{alignSelf: 'center', marginTop: 10}}>
+                      <Text style={{color: 'red'}}>{errMsg}</Text>
+                    </Box>
+                  )}
           </VStack>
         </VStack>
       </VStack>

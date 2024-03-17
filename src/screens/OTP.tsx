@@ -24,6 +24,8 @@ const OTP = ({phone}: OTPProps) => {
   const email = route.params?.email;
   const acceptTerms = route.params?.acceptTerms;
   const forgetPassword = route.params?.forgetPassword;
+  const accountType = route.params?.accountType;
+console.log("OTP",phone_number);
 
   return (
     <SafeAreaView style={{backgroundColor: '#f1f1f1'}}>
@@ -50,6 +52,7 @@ const OTP = ({phone}: OTPProps) => {
             phoneNumber={phone_number}
             password={password}
             code={''}
+            accountType={accountType}
             forgetPassword={forgetPassword}
           />
         </VStack>

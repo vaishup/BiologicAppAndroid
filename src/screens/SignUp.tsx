@@ -35,8 +35,14 @@ import {
   SelectDragIndicatorWrapper,
   SelectItem,
   SelectPortal,
+  RadioGroup,
+  Radio,
+  RadioIndicator,
+  RadioIcon,
+  RadioLabel,
   SelectBackdrop,
   Icon as Icons,
+  CircleIcon,
   SelectIcon,
   ChevronDownIcon,
 } from '@gluestack-ui/themed';
@@ -55,6 +61,16 @@ const SignUp = () => {
   const [isOtpStage, setIsOtpStage] = useState(false);
   const [username, setUsername] = useState('');
   const navigation = useNavigation();
+  const [accountType, setAccountType] = useState('Person');
+  const [isPerson, setIsPerson] = useState(false);
+  const handleAccountTypeChange = (newValue) => {
+    setAccountType(newValue);
+    if (newValue === 'Person') {
+      setIsPerson(true);
+    } else {
+      setIsPerson(false);
+    }
+  };
   //------------------yup validation and password show /hide ,space functions-------------------------
 
   const handleState = () => {
@@ -94,11 +110,8 @@ const SignUp = () => {
       /\D/g,
       '',
     )}`;
-    console.log('fullPhoneNumber', fullPhoneNumber);
-    console.log('values', values);
-    console.log('selectedPhoneCode', selectedPhoneCode);
-
-    //console.log(values);
+    console.log("fullNumber", fullPhoneNumber);
+    
     try {
       // Await the signUpUser call and capture the signUpResponse
       const signUpResponse = await signUpUser({
@@ -111,18 +124,34 @@ const SignUp = () => {
       console.log('Success', signUpResponse);
       setUsername(values.email);
       setIsOtpStage(true);
+
       navigation.navigate('OTP', {
         phone_number: fullPhoneNumber,
         username: values.userName,
         password: values.password,
         email: values.email,
         acceptTerms: values.acceptTerms,
+        // accountType:accountType
+        // accountType:isPerson
       });
     } catch (error) {
       console.log('Error', error);
     }
   }
 
+  // useEffect(() => {
+  //   // Add a listener for when the component is focused
+  //   //handleSignOut()
+  //   console.log("vaules", valuess);
+    
+  // }, []);
+  // async function handleSignOut() {
+  //   try {
+  //     await signOut();
+  //   } catch (error) {
+  //     console.log('error signing out: ', error);
+  //   }
+  // }
   return (
     <KeyboardAwareScrollView
       style={{flex: 1}}
@@ -289,6 +318,26 @@ const SignUp = () => {
                     <Text color="red">{errors.password}</Text>
                   )}
                 </Box>
+                <Text color="#005DAA">Choose Account Type</Text>
+
+                <HStack space="sm">
+                  <RadioGroup value={accountType} onChange={handleAccountTypeChange}>
+                    <HStack space="2xl">
+                      <Radio value="Person ">
+                        <RadioIndicator mr="$2">
+                          <RadioIcon as={CircleIcon} />
+                        </RadioIndicator>
+                        <RadioLabel>Person</RadioLabel>
+                      </Radio>
+                      <Radio value="Business">
+                        <RadioIndicator mr="$2">
+                          <RadioIcon as={CircleIcon} />
+                        </RadioIndicator>
+                        <RadioLabel>Business</RadioLabel>
+                      </Radio>
+                    </HStack>
+                  </RadioGroup>
+                </HStack>
                 <Field name="acceptTerms" type="checkbox">
                   {({field}: {field: any}) => (
                     <Checkbox
@@ -313,6 +362,7 @@ const SignUp = () => {
                 <VStack>
                   <CustomButton
                     action={() => {
+                      console.log(accountType);                  
                       handleSubmit();
                       handleSignUp(values);
                     }}
