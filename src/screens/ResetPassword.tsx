@@ -7,6 +7,8 @@ import {Formik} from 'formik';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import CustomButton from '../components/Button';
 import {colors} from '../styles/colors';
+import {signIn} from 'aws-amplify/auth';
+
 import {AlertCircle} from 'lucide-react-native';
 import {
   Text,
@@ -20,6 +22,7 @@ import {
 import * as Yup from 'yup';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {confirmResetPassword, updatePassword} from 'aws-amplify/auth';
+import {useAuth} from '../navigation';
 
 const {width, height} = Dimensions.get('window');
 
@@ -31,6 +34,10 @@ const ResetPassword = () => {
   const navigation = useNavigation();
   const [showPassword, setShowPassword] = useState(false);
   const [confirmPassword, setConfirmassword] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [errMsg, setErrMsg] = useState('');
+  const {setIsUserAuth} = useAuth();
+
   //------------------yup validation and password show /hide functions-------------------------
   const handleState = () => {
     setShowPassword(showState => {
@@ -66,11 +73,32 @@ const ResetPassword = () => {
   }) {
     try {
       await confirmResetPassword({username, confirmationCode, newPassword});
-      console.log('its updated..');
-      navigation.navigate('DrawNavigator');
+      console.log('its updated..' , username);
+      console.log('its updated..' , newPassword);
+      userSignIn({username:username,password:newPassword});
+     // navigation.navigate('DrawNavigator');
     } catch (error) {
       console.log('error ResetPwd in', error);
+      setIsError(true);
       const message = error.toString().split(':').pop().trim();
+      setErrMsg(message);
+
+    }
+  }
+  async function userSignIn({username, password}) {
+    try {
+      const {isSignedIn} = await signIn({
+        username: username,
+        password: password,
+      });
+      console.log('Signed', isSignedIn);
+      setIsUserAuth(true);
+      navigation.navigate('DrawNavigator');
+    } catch (error) {
+      console.log('error signing in', error);
+      setIsError(true);
+      const message = error.toString().split(':').pop().trim();
+      setErrMsg(message);
     }
   }
   return (
@@ -101,6 +129,8 @@ const ResetPassword = () => {
                 });
                 return;
               }
+              console.log(values);
+              
             }}>
             {({
               handleChange,
@@ -178,11 +208,23 @@ const ResetPassword = () => {
                 <CustomButton
                   action={() => {
                     handleSubmit();
+                    console.log(email, code, values.confirmPassword);
+                    
+                    handleConfirmResetPassword({
+                      username: email,
+                      confirmationCode: code,
+                      newPassword: values.confirmPassword
+                    });
                   }}
                   backgroundColor={colors.primary}
-                  text="Forgot Password"
+                   text="Forgot Password"
                   textColor={colors.white}
                 />
+                {isError && (
+                    <Box style={{alignSelf: 'center', marginTop: 10}}>
+                      <Text style={{color: 'red'}}>{errMsg}</Text>
+                    </Box>
+                  )}
               </VStack>
             )}
           </Formik>
