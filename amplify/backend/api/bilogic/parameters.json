@@ -1,0 +1,5 @@
+{
+  "AppSyncApiName": "bilogic",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false
+}

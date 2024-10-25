@@ -19,24 +19,24 @@ const Slider = () => {
     {
       id: 1,
       image: require("../../assets/logo.png"),
-      title: 'Welcome to Salane',
+      title: 'Welcome to Bio-Logic',
       description:
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+        '',
     },
-    {
-      id: 2,
-      image: "",
-      title: 'Welcome to Salane',
-      description:
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-    },
-    {
-      id: 3,
-      image: "",
-      title: 'Welcome to Salane',
-      description:
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-    },
+    // {
+    //   id: 2,
+    //   image: "",
+    //   title: 'Welcome to Biologic',
+    //   description:
+    //     'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+    // },
+    // {
+    //   id: 3,
+    //   image: "",
+    //   title: 'Welcome to Biologic',
+    //   description:
+    //     'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+    // },
   ];
   const handleOnScroll = (event: any) => {
     Animated.event(

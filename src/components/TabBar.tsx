@@ -1,13 +1,18 @@
-import React from 'react';
-import {Dimensions, TouchableOpacity, StyleSheet, Platform} from 'react-native';
-import {HStack, SafeAreaView, Text, View} from '@gluestack-ui/themed';
+import React from "react";
+import {
+  Dimensions,
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+} from "react-native";
+import { HStack, SafeAreaView, Text, View } from "@gluestack-ui/themed";
 
-import Icon from './IconPack';
-import {colors} from '../styles/colors';
+import Icon from "./IconPack";
+import { colors } from "../styles/colors";
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
-const TabBar = ({navigation, state}: any) => {
+const TabBar = ({ navigation, state }: any) => {
   const getIconColor = (routeName: any) => {
     const isCurrentRoute = state.routeNames[state.index] === routeName;
     return isCurrentRoute ? "#006299" : colors.secondary; // Replace 'activeColor' and 'inactiveColor' with your actual colors
@@ -17,65 +22,45 @@ const TabBar = ({navigation, state}: any) => {
     <SafeAreaView
       backgroundColor="white"
       borderTopLeftRadius={15}
-      borderTopRightRadius={15}>
+      borderTopRightRadius={15}
+    >
       <HStack height={60} alignItems="center">
         <TouchableOpacity
-          style={{flex: 1, alignItems: 'center'}}
+          style={{ flex: 1, alignItems: "center" }}
           onPress={() => {
-            navigation.navigate('TransactionHistory');
-          }}>
-          <Icon
-            type={'transaction'}
-            color={getIconColor('TransactionHistory')}
-          />
+            navigation.navigate("Home");
+          }}
+        >
+          <Icon type={"HouseIcon"} color={getIconColor("TransactionHistory")} />
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.sendBtn}
+          style={{ flex: 1, alignItems: "center" }}
           onPress={() => {
-            navigation.navigate('HomePage');
-          }}>
-          <View mr={3}>
-            <Icon type={'send'} size={32} />
-          </View>
+           navigation.navigate("ViewProfile");
+          }}
+        >
+          <Icon type={"CircleUserRound"} color={getIconColor("Notification")} />
         </TouchableOpacity>
 
         <TouchableOpacity
+          style={{ flex: 1, alignItems: "center" }}
+          onPress={() => {
+       navigation.navigate("Settings");
+          }}
+        >
+          <Icon type={"Settings"} color={getIconColor("Notification")} />
+        </TouchableOpacity>
+        {/* <TouchableOpacity
           style={{flex: 1, alignItems: 'center'}}
           onPress={() => {
-            navigation.navigate('Notification');
+            navigation.navigate('Login');
           }}>
-          <Icon type={'noti'} color={getIconColor('Notification')} />
-        </TouchableOpacity>
+          <Icon type={'CircleUser'} color={getIconColor('Notification')} />
+        </TouchableOpacity> */}
       </HStack>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  sendBtn: {
-    backgroundColor: colors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-
-    width: 65,
-    height: 65,
-    borderRadius: 100,
-    marginTop: -55,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#7AC6F1',
-        shadowOffset: {width: 2, height: 2},
-        shadowOpacity: 0.5,
-        shadowRadius: 2,
-      },
-      android: {
-        borderRightWidth: 2,
-        borderBottomWidth: 2,
-        borderColor: 'rgba(0, 0, 0, 0.1)',
-      },
-    }),
-  },
-});
 
 export default TabBar;

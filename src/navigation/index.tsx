@@ -1,54 +1,50 @@
-import {useState, createContext, useContext} from 'react';
-import * as React from 'react';
+import {useState, createContext, useContext, ReactNode} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-
-import DrawerContent from '../components/DrawerContent';
-import SignUp from '../screens/SignUp';
-import Login from '../screens/Login';
-import OTP from '../screens/OTP';
-import ForgetPassword from '../screens/ForgetPassword';
-import ResetPassword from '../screens/ResetPassword';
-import TabBar from '../components/TabBar';
-import HOC from '../components/HOC';
-
-import Home from '../screens/Home';
-import TransactionHistory from '../screens/TransactionHistory';
-import Notification from '../screens/Notification';
-
-import Profile from '../screens/Profile';
-import SavedRecipients from '../screens/SavedRecipents';
-import ChangePassword from '../screens/ChangePassword';
-import HelpCenter from '../screens/HelpCenter';
-import AboutUs from '../screens/AboutUs';
-import PrivacyPolicy from '../screens/PrivacyPolicy';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import {colors} from '../styles/colors';
+import GlobalModal, {useModal} from '../components/Modal/GlobalModal';
+import NavBar from '../components/NavBar';
 import Welcome from '../screens/Welcome';
+import CompeleteProfile from '../screens/CompeleteProfile';
+import SignIn from '../screens/Login';
+import Home from '../screens/Home';
+import Profile from '../screens/Profile';
+import BioMatrics from '../screens/BioMatrics';
+import ViewProfile from '../screens/ViewProfile';
+import ShiftTimer from '../screens/ShiftTimer';
+import TabBar from '../components/TabBar'; // assuming you have a custom TabBar component
+import EditProfile from '../screens/EditProfile';
+import ResetPassword from '../screens/ResetPassword';
+import Settings from '../screens/Settings';
+import ShiftList from '../screens/ShiftList';
+import ViewID from '../screens/ViewID';
 
-export type NavigationParams = {
-  Home: undefined;
-  OTP: undefined;
-};
+// import SignUp from '../screens/SignUp';
+// import ForgotPassword from '../screens/ForgotPassword';
+// import ResetPassword from '../screens/ResetPassword';
 
 const Stack = createNativeStackNavigator();
-const Drawer = createDrawerNavigator();
 const Tab = createBottomTabNavigator();
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
 interface AuthContextProps {
   isUserAuth: boolean;
   setIsUserAuth: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const initialAuthState = false;
-
 const AuthContext = createContext<AuthContextProps>({
   isUserAuth: initialAuthState,
   setIsUserAuth: () => {},
 });
-// @ts-ignore
-const AuthProvider: React.FC = ({children}) => {
-  const [isUserAuth, setIsUserAuth] = useState<boolean>(initialAuthState);
 
+const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
+  const [isUserAuth, setIsUserAuth] = useState<boolean>(initialAuthState);
   const contextValue: AuthContextProps = {
     isUserAuth,
     setIsUserAuth,
@@ -68,62 +64,49 @@ const useAuth = (): AuthContextProps => {
 export {AuthProvider, useAuth};
 
 const Root = () => {
-  const newUser = true;
-  //if user is not authenticated, show login/sign up
   const {isUserAuth} = useAuth();
+  const {isModalVisible} = useModal();
 
   return (
     <NavigationContainer>
-      {!isUserAuth ? (
-        <>
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
-            }}>
-            {newUser && !isUserAuth ? (
-              
-              <Stack.Screen name="ResetPassword" component={HOC(ResetPassword)} />
-              ) : (
-              <></>
-            )}
+      <KeyboardAwareScrollView
+        bounces={false}
+        style={{flex: 1, backgroundColor: colors.bgColor}}
+        contentContainerStyle={{flexGrow: 1, backgroundColor: colors.bgColor}}
+        keyboardShouldPersistTaps="handled">
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}>
+          {!isUserAuth ? (
+            <Stack.Group key={'Auth'}>
+              <Stack.Screen name="Welcome" component={Welcome} />
+              <Stack.Screen name="SignIn" component={SignIn} />
+              <Stack.Screen
+                name="CompeleteProfile"
+                component={CompeleteProfile}
+              />
+              <Stack.Screen name="Profile" component={Profile} />
+              <Stack.Screen name="BioMatrics" component={BioMatrics} />
+            </Stack.Group>
+          ) : (
+            <Stack.Group key={'AfterAuth'}>
+              <Stack.Screen name="Home" component={Home} />
+              <Stack.Screen name="ShiftList" component={ShiftList} />
+              <Stack.Screen name="ViewProfile" component={ViewProfile} />
+              <Stack.Screen name="ShiftTimer" component={ShiftTimer} />
+              <Stack.Screen name="EditProfile" component={EditProfile} />
+              <Stack.Screen name="ResetPassword" component={ResetPassword} />
+              <Stack.Screen name="Settings" component={Settings} />
+              <Stack.Screen name="ViewID" component={ViewID} />
 
-            <Stack.Screen name="SignUp" component={HOC(SignUp)} />
-            <Stack.Screen name="OTP" component={HOC(OTP)} />
-            <Stack.Screen name="Login" component={HOC(Login)} />
-            <Stack.Screen
-              name="ForgetPassword"
-              component={HOC(ForgetPassword)}
-            />
-            <Stack.Screen name="DrawNavigator" component={DrawNavigator} />
-
-          </Stack.Navigator>
-        </>
-      ) : (
-        <Stack.Screen name="DrawNavigator" component={DrawNavigator} />
-      )}
+              <Stack.Screen name="TabNav" component={TabNavigator} />
+            </Stack.Group>
+          )}
+        </Stack.Navigator>
+        {isModalVisible && <GlobalModal />}
+      </KeyboardAwareScrollView>
     </NavigationContainer>
-  );
-};
-
-const DrawNavigator = () => {
-  return (
-    <Drawer.Navigator
-      screenOptions={{
-        headerShown: false,
-        drawerStyle: {
-          borderTopRightRadius: 15,
-        },
-      }}
-      drawerContent={DrawerContent}
-      initialRouteName="Welcome">
-      <Drawer.Screen name="Home" component={TabNavigator} />
-      {/* <Drawer.Screen name="Profile" component={HOC(Profile)} /> */}
-      <Drawer.Screen name="SavedRecipients" component={HOC(SavedRecipients)} />
-      <Drawer.Screen name="ChangePassword" component={HOC(ChangePassword)} />
-      <Drawer.Screen name="HelpCenter" component={HOC(HelpCenter)} />
-      <Drawer.Screen name="AboutUs" component={HOC(AboutUs)} />
-      <Drawer.Screen name="PrivacyPolicy" component={HOC(PrivacyPolicy)} />
-    </Drawer.Navigator>
   );
 };
 
@@ -137,25 +120,18 @@ const TabNavigator = () => {
           borderTopRightRadius: 16,
         },
       }}
-      tabBar={props => <TabBar {...props} />}
-      initialRouteName="HomeStack">
-      <Tab.Screen
-        name="TransactionHistory"
-        component={HOC(TransactionHistory)}
-      />
+      initialRouteName="Home">
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="ShiftList" component={ShiftList} />
+      <Tab.Screen name="ViewProfile" component={ViewProfile} />
+      <Tab.Screen name="ShiftTimer" component={ShiftTimer} />
+      <Tab.Screen name="EditProfile" component={EditProfile} />
+      <Tab.Screen name="ResetPassword" component={ResetPassword} />
+      <Tab.Screen name="Settings" component={Settings} />
 
-      <Tab.Screen name="HomeStack" component={HomeStack} />
-      <Tab.Screen name="Notification" component={HOC(Notification)} />
+      {/* <Tab.Screen name="Listing" component={Listing} /> */}
+      {/* <Tab.Screen name="Login" component={Login} /> */}
     </Tab.Navigator>
-  );
-};
-
-const HomeStack = () => {
-  return (
-    <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name="HomePage" component={HOC(Home)} />
-      <Stack.Screen name="Profile" component={HOC(Profile)} />
-    </Stack.Navigator>
   );
 };
 

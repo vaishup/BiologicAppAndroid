@@ -1,0 +1,40 @@
+type TheShifts @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  Location: String
+  duties: String
+  staffId: String
+  time: String
+  startTime: AWSDateTime
+  endTime: AWSDateTime
+  startDate: String
+  endDate: String
+  shiftstatus: String
+  userId:String
+
+}
+
+type TheStaff @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  phoneNumber: String
+  email: String
+  DOB: String
+  photourl: String
+  isBiomatritcs: String
+  profileStatus: String
+  Location:String
+  IsActive:String
+  shiftIds:[String]
+  userId:String
+  latitude: String 
+  longitude: String
+
+}
+
+type TheAdminStaffUser @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  phoneNumber: String
+  email: String
+  userType:String
+}

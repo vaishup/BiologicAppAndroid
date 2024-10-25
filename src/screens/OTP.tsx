@@ -33,7 +33,7 @@ console.log("OTP",phone_number);
         <VStack justifyContent="space-between">
           <ImageView
             alt="Logo Styles"
-            source={require('../assets/logo_withName.png')}
+            source={require('../assets/logo.png')}
             style={styles.imageStyle}
           />
           <Heading style={{justifyContent: 'center', alignSelf: 'center'}}>

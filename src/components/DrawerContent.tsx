@@ -42,7 +42,7 @@ const DrawerContent = ({navigation}: {navigation: any}) => {
   useEffect(() => {
     const fetchFullName = async () => {
       const userInfo = await getUserInfo();
-      console.log(userInfo?.name);
+      console.log("name...",userInfo?.name);
       
       if (userInfo) {
         setFullName(userInfo.name); 

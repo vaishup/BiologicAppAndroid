@@ -161,7 +161,7 @@ const SignUp = () => {
         <Box>
           <ImageView
             alt="Logo Styles"
-            source={require('../assets/logo_withName.png')}
+            source={require('../assets/logo.png')}
             style={styles.imageStyle}
           />
           <Formik

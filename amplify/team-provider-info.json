@@ -1,0 +1,36 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-bilogic-staging-8e024-authRole",
+      "UnauthRoleArn": "arn:aws:iam::442426877820:role/amplify-bilogic-staging-8e024-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::442426877820:role/amplify-bilogic-staging-8e024-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-bilogic-staging-8e024-deployment",
+      "UnauthRoleName": "amplify-bilogic-staging-8e024-unauthRole",
+      "StackName": "amplify-bilogic-staging-8e024",
+      "StackId": "arn:aws:cloudformation:us-east-2:442426877820:stack/amplify-bilogic-staging-8e024/954f3c40-7b9b-11ef-ab92-06e8f0aee025",
+      "AmplifyAppId": "d1ftoguru7b2om"
+    },
+    "categories": {
+      "auth": {
+        "bilogicea355cc4": {}
+      },
+      "function": {
+        "CreateStaff": {
+          "deploymentBucketName": "amplify-bilogic-staging-8e024-deployment",
+          "s3Key": "amplify-builds/CreateStaff-397a75594e666e727355-build.zip"
+        },
+        "CreateShiftForEmployee": {
+          "deploymentBucketName": "amplify-bilogic-staging-8e024-deployment",
+          "s3Key": "amplify-builds/CreateShiftForEmployee-2b32532b6f71376d6966-build.zip"
+        }
+      },
+      "api": {
+        "bilogic": {}
+      },
+      "storage": {
+        "s38a04c9da": {}
+      }
+    }
+  }
+}

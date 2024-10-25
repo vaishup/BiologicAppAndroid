@@ -19,6 +19,7 @@ import {
   WalletMinimal,
   User2,
   Eye,EyeOff,ChevronDown,Lock,
+ HomeIcon
  
 } from 'lucide-react-native';
 import {colors} from '../styles/colors';
@@ -50,6 +51,12 @@ const Icon = (props: IconProps) => {
         size={props.size ?? size_sm}
       />
     ),
+    CircleUserRound: (
+      <CircleUserRound
+        color={props.color ?? colors.secondary}
+        size={props.size ?? size_sm}
+      />
+    ),
     // -------------------------------- NavBar ---------------------------------
     transaction: (
       <WalletMinimal
@@ -64,10 +71,22 @@ const Icon = (props: IconProps) => {
         size={props.size ?? size_sm}
       />
     ),
+    Settings: (
+      <Settings
+        color={props.color ?? colors.txtColor_bg}
+        size={props.size ?? size_sm}
+      />
+    ),
     // -------------------------------- Drawer ---------------------------------
     drawer: (
       <LayoutDashboard
         color={props.color ?? colors.secondary}
+        size={props.size ?? size_sm}
+      />
+    ),
+    HouseIcon: (
+      <HomeIcon
+        color={props.color ?? colors.txtColor_bg}
         size={props.size ?? size_sm}
       />
     ),

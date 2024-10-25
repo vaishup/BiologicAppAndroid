@@ -1,15 +1,25 @@
 import React from 'react';
-import {GluestackUIProvider, Text} from '@gluestack-ui/themed';
+import {GluestackUIProvider} from '@gluestack-ui/themed';
 import {config} from '@gluestack-ui/config';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import Root, {AuthProvider} from './src/navigation';
+import {ModalProvider} from './src/components/Modal/GlobalModal';
 
-import Root from './src/navigation';
 
 function App(): React.JSX.Element {
   return (
-    <GluestackUIProvider config={config}>
-      <Root />
-    </GluestackUIProvider>
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <GluestackUIProvider config={config}>
+          <ModalProvider>
+            <AuthProvider>
+              <Root />
+            </AuthProvider>
+          </ModalProvider>
+        </GluestackUIProvider>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 }
-
 export default App;

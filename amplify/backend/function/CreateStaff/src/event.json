@@ -1,0 +1,21 @@
+{
+  "Records": [
+    {
+      "eventName": "INSERT",
+      "dynamodb": {
+        "NewImage": {
+          "email": {
+            "S": "vsp681999@gmail.com"
+          },
+          "name": {
+            "S": "bob"
+          },
+           
+          "id": {
+            "S": "17d1a342-6f53-40fe-b0b9-58adcc6ff339"
+          }
+        }
+      }
+    }
+  ]
+}

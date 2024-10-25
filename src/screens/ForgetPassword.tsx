@@ -92,7 +92,7 @@ const ForgetPassword = () => {
         <Box>
           <ImageView
             alt="Logo Styles"
-            source={require('../assets/logo_withName.png')}
+            source={require('../assets/logo.png')}
             style={styles.imageStyle}
           />
           <Heading color="#005DAA" justifyContent="center" alignSelf="center">

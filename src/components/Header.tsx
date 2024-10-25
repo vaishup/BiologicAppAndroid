@@ -39,16 +39,16 @@ const Header: React.FC<HeaderProps> = ({
                 navigation.goBack();
               }
         }>
-        <Icon type={leftBtn ? leftBtn : 'backArrow'} size={leftBtnSize ?? 35} />
+        <Icon type={leftBtn ? leftBtn : 'backArrow'} color='black'size={leftBtnSize ?? 35} />
       </TouchableOpacity>
       {title && (
-        <Text alignSelf="center" fontWeight="$semibold" size="lg">
+        <Text alignSelf="center"  color='black'fontWeight="$semibold" size="xl">
           {title}
         </Text>
       )}
       {isShowLogo && (
         <Image
-          alt="Salane logo"
+          alt="BioLogic logo"
           height={h - 15}
           resizeMode="contain"
           source={require('../assets/logo.png')}
@@ -56,7 +56,7 @@ const Header: React.FC<HeaderProps> = ({
       )}
 
       <TouchableOpacity style={{width: 30}} onPress={rightAction}>
-        {rightBtn && <Icon type={rightBtn} size={rightBtnSize ?? 35} />}
+        {rightBtn && <Icon type={rightBtn} size={rightBtnSize ?? 35}  />}
       </TouchableOpacity>
     </HStack>
   );

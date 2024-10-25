@@ -15,6 +15,7 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 import CustomButton from '../components/Button';
 import {colors} from '../styles/colors';
+import CustomTextField from '../components/TextField';
 
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {
@@ -29,23 +30,27 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {signIn} from 'aws-amplify/auth';
 import {useAuth} from '../navigation';
+import {signOut} from 'aws-amplify/auth';
+import {getTableID} from '../hooks/authServices.tsx';
+import {listTheShifts, getTheStaff} from '../graphql/queries';
+import {generateClient} from 'aws-amplify/api';
+
 const {width, height} = Dimensions.get('window');
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
-  const [usernameInput, setUserName] = useState('');
-  const [passwordInput, setPassword] = useState('');
+  const [usernameInput, setUserName] = useState('tesb0');
+  const [passwordInput, setPassword] = useState('kg70gueXjG');
   const [isError, setIsError] = useState(false);
   const [errMsg, setErrMsg] = useState('');
   const {setIsUserAuth} = useAuth();
   const route = useRoute();
+  const API = generateClient();
 
   //------------------yup validation and password show /hide functions-------------------------
   const schema = Yup.object().shape({
-    email: Yup.string()
-      .email('Invalid email format')
-      .required('Email is required'),
+    email: Yup.string().required('Email is required'),
     password: Yup.string().required('Password is required'),
   });
   const handleState = () => {
@@ -57,24 +62,84 @@ const Login = () => {
     const textWithoutSpaces = newString.replace(/\s+/g, '');
     return textWithoutSpaces;
   };
+  useEffect(() => {
+    handleSignOut();
+  }, []);
   //------------------AWS auth amplify userSignIn functions-------------------------
   async function userSignIn({username2, password2}) {
     try {
+      // Check if there is already a signed-in user
+
+      // Proceed with signing in the new user
       const {isSignedIn} = await signIn({
         username: username2,
         password: password2,
       });
-      console.log('Signed', isSignedIn);
-      setIsUserAuth(true);
-      navigation.navigate('DrawNavigator');
+      try {
+        const userId = await getTableID();
+        console.log('userDetail', userId);
+        const staffData = await API.graphql({
+          query: getTheStaff, // Replace with your actual query to get staff by ID
+          variables: {id: userId},
+        });
+        const staff = staffData.data.getTheStaff;
+        if (staff.profileStatus === 'Incomplete') {
+          navigation.navigate('CompeleteProfile');
+        } else {
+          //navigation.navigate('CompeleteProfile');
+
+         setIsUserAuth(true);
+        }
+        console.log(userId);
+      } catch (error) {
+        console.log('sdd');
+      }
+      // navigation.navigate('CompeleteProfile');
     } catch (error) {
-      console.log('error signing in', error);
+      console.log('Error signing in:', error);
+      await signOut();
       setIsError(true);
       const message = error.toString().split(':').pop().trim();
       setErrMsg(message);
+      await signOut();
+      if (error.message.includes('There is already a signed-in user')) {
+        setErrMsg('There is already a signed-in user. Please sign out first.');
+    await signOut();
+      } else {
+        await signOut();
+        const message = error.toString().split(':').pop().trim();
+        setErrMsg(message || 'Error signing in. Please try again.');
+        await signOut();
+      }
     }
   }
+  const getUser = async () => {
+    const userId = await getTableID();
+    console.log(userId);
 
+    try {
+      console.log('Fetching staff with ID:', userId); // Debug log
+      const staffData = await API.graphql({
+        query: getTheStaff, // Replace with your actual query to get staff by ID
+        variables: {id: userId},
+      });
+      console.log(staffData);
+
+      const staff = staffData.data.getTheStaff;
+
+      console.log('staff...s', staff.id);
+    } catch (error) {
+      console.error('Error fetching staff data:', error);
+    }
+  };
+  async function handleSignOut() {
+    try {
+      await signOut();
+      // navigation.navigate("Welcome");
+    } catch (error) {
+      console.log('error signing out: ', error);
+    }
+  }
   return (
     <KeyboardAwareScrollView
       style={{flex: 1}}
@@ -84,13 +149,13 @@ const Login = () => {
         <Box>
           <ImageView
             alt="Logo Styles"
-            source={require('../assets/logo_withName.png')}
+            source={require('../assets/logo.png')}
             style={styles.imageStyle}
           />
           <Formik
             initialValues={{
-              email: '',
-              password: '',
+              email: 'tes7e',
+              password: 'WNw8RKImGF',
             }}
             validationSchema={schema}
             onSubmit={values => {
@@ -118,10 +183,19 @@ const Login = () => {
                 space={errors.email || errors.password ? 'sm' : 'xl'}
                 p={30}>
                 <Box style={[styles.container]}>
-                  <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
+                  <Text
+                    fontSize={'$sm'}
+                    color={colors.txtColor_bg}
+                    style={{padding: 3}}>
                     {'Email'}
                   </Text>
-                  <Input>
+
+                  <Input
+                    h={60}
+                    borderRadius={10}
+                    borderWidth={1}
+                    borderColor="#C9C9C9"
+                    backgroundColor="#cccccc">
                     <InputField
                       onChangeText={text => {
                         handleChange('email')(text);
@@ -144,10 +218,19 @@ const Login = () => {
                   )}
                 </Box>
                 <Box style={[styles.container]}>
-                  <Text fontSize={'$sm'} color="#005DAA" style={{padding: 3}}>
+                  <Text
+                    fontSize={'$sm'}
+                    color={colors.txtColor_bg}
+                    style={{padding: 3}}>
                     {'Password'}
                   </Text>
-                  <Input>
+
+                  <Input
+                    h={60}
+                    borderRadius={10}
+                    borderWidth={1}
+                    borderColor="#C9C9C9"
+                    backgroundColor="#cccccc">
                     <InputField
                       onChangeText={handleChange('password')}
                       onBlur={handleBlur('password')}
@@ -162,7 +245,7 @@ const Login = () => {
                       ) : (
                         <Icon
                           type={showPassword ? 'eye' : 'eyeOff'}
-                          color={'#C9C9C9'}
+                          color={colors.txtColor_bg}
                         />
                       )}
                     </InputSlot>
@@ -172,22 +255,23 @@ const Login = () => {
                   )}
                 </Box>
                 <VStack>
-                  <TouchableOpacity
+                  {/* <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate('ForgetPassword');
+                      //navigation.navigate('ForgetPassword');
                     }}>
                     <Text style={styles.forgotPassword}>Forgot Password?</Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
 
                   <CustomButton
+                    marginTop={30}
+                    backgroundColor={colors.btnBgColor_secondary}
                     action={() => {
-                      handleSubmit();
+                     // handleSubmit();
                       userSignIn({
                         username2: handleChangeSpace(values.email),
                         password2: handleChangeSpace(values.password),
                       });
                     }}
-                    backgroundColor={colors.primary}
                     text="Login"
                     textColor={colors.white}
                   />
@@ -201,18 +285,6 @@ const Login = () => {
               </VStack>
             )}
           </Formik>
-
-          <Box style={[styles.signupContainer, {flex: 1}]}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('SignUp');
-              }}>
-              <Text style={styles.signupText}>
-                Don't have an account?{' '}
-                <Text style={styles.boldText}>Signup</Text>
-              </Text>
-            </TouchableOpacity>
-          </Box>
         </Box>
       </SafeAreaView>
     </KeyboardAwareScrollView>
