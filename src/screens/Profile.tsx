@@ -240,8 +240,8 @@ const Profile = () => {
 
             <View>
               {/* CustomTextField with TouchableOpacity to trigger the DatePicker */}
-              <TouchableOpacity 
-              style={{marginBottom:10}}
+              <TouchableOpacity
+                style={{marginBottom: 10}}
                 onPress={() =>
                   setDatePicker({
                     isOpen: true,
@@ -264,20 +264,22 @@ const Profile = () => {
                   borderColor={colors.txtColor_bg}
                 />
               </TouchableOpacity>
-              {errors.dob ? ( 
+              {errors.dob ? (
                 <Text style={styles.errorText}>{errors.dob}</Text>
               ) : null}
 
-<DatePicker
-  modal
-  maximumDate={new Date()} // Correct: User can't select future dates
-  open={datePicker.isOpen}
-  date={datePicker.date}
-  onConfirm={newDate => handleDateConfirm(newDate)} // Confirm the selected date
-  onCancel={() => setDatePicker(prev => ({ ...prev, isOpen: false }))} // Close the picker
-  mode="date"
-  timeZoneOffsetInMinutes={0}
-/>
+              <DatePicker
+                modal
+                maximumDate={new Date()} // Correct: User can't select future dates
+                open={datePicker.isOpen}
+                date={datePicker.date}
+                onConfirm={newDate => handleDateConfirm(newDate)} // Confirm the selected date
+                onCancel={() =>
+                  setDatePicker(prev => ({...prev, isOpen: false}))
+                } // Close the picker
+                mode="date"
+                timeZoneOffsetInMinutes={0}
+              />
             </View>
 
             <VStack space="xl">
@@ -368,7 +370,6 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     fontSize: 14,
-
   },
 });
 export default Profile;
