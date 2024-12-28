@@ -40,8 +40,10 @@ const {width, height} = Dimensions.get('window');
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
-  const [usernameInput, setUserName] = useState('tesb0');
-  const [passwordInput, setPassword] = useState('kg70gueXjG');
+  // const [usernameInput, setUserName] = useState('tes17');
+  // const [passwordInput, setPassword] = useState('5VFlLjq17C');
+  const [usernameInput, setUserName] = useState('');
+  const [passwordInput, setPassword] = useState('');
   const [isError, setIsError] = useState(false);
   const [errMsg, setErrMsg] = useState('');
   const {setIsUserAuth} = useAuth();
@@ -66,53 +68,60 @@ const Login = () => {
     handleSignOut();
   }, []);
   //------------------AWS auth amplify userSignIn functions-------------------------
-  async function userSignIn({username2, password2}) {
+  async function userSignIn({ username2, password2 }) {
     try {
-      // Check if there is already a signed-in user
-
-      // Proceed with signing in the new user
-      const {isSignedIn} = await signIn({
+      // Sign in the user
+      const { isSignedIn } = await signIn({
         username: username2,
         password: password2,
       });
-      try {
-        const userId = await getTableID();
-        console.log('userDetail', userId);
-        const staffData = await API.graphql({
-          query: getTheStaff, // Replace with your actual query to get staff by ID
-          variables: {id: userId},
-        });
-        const staff = staffData.data.getTheStaff;
-        if (staff.profileStatus === 'Incomplete') {
-          navigation.navigate('CompeleteProfile');
-        } else {
-          //navigation.navigate('CompeleteProfile');
-
-         setIsUserAuth(true);
+  
+      if (isSignedIn) {
+        try {
+          // Fetch the user ID (Replace `getTableID` with your actual function to fetch user ID)
+          const userId = await getTableID();
+          console.log('User ID:', userId);
+  
+          // Fetch the staff profile details using GraphQL
+          const staffData = await API.graphql({
+            query: getTheStaff, // Replace with your actual query
+            variables: { id: userId },
+          });
+  
+          const staff = staffData.data.getTheStaff;
+  
+          // Check the profile status
+          if (staff.profileStatus === 'Incomplete') {
+            // Redirect to Complete Profile screen
+            navigation.navigate('CompeleteProfile');
+          } else {
+            // Set user authentication status to true
+            setIsUserAuth(true);
+            //navigation.navigate('Home');
+          }
+        } catch (error) {
+          console.error('Error fetching staff details:', error);
+          setIsError(true);
+          setErrMsg('Error fetching profile details. Please try again.');
         }
-        console.log(userId);
-      } catch (error) {
-        console.log('sdd');
       }
-      // navigation.navigate('CompeleteProfile');
     } catch (error) {
-      console.log('Error signing in:', error);
+      console.error('Error signing in:', error);
+  
+      // Handle sign-out if there's an error
       await signOut();
-      setIsError(true);
-      const message = error.toString().split(':').pop().trim();
-      setErrMsg(message);
-      await signOut();
+  
+      const errorMessage = error.toString().split(':').pop().trim();
       if (error.message.includes('There is already a signed-in user')) {
         setErrMsg('There is already a signed-in user. Please sign out first.');
-    await signOut();
       } else {
-        await signOut();
-        const message = error.toString().split(':').pop().trim();
-        setErrMsg(message || 'Error signing in. Please try again.');
-        await signOut();
+        setErrMsg(errorMessage || 'Error signing in. Please try again.');
       }
+  
+      setIsError(true);
     }
   }
+  
   const getUser = async () => {
     const userId = await getTableID();
     console.log(userId);
@@ -154,8 +163,8 @@ const Login = () => {
           />
           <Formik
             initialValues={{
-              email: 'tes7e',
-              password: 'WNw8RKImGF',
+              email: '',
+              password: '',
             }}
             validationSchema={schema}
             onSubmit={values => {
@@ -266,7 +275,7 @@ const Login = () => {
                     marginTop={30}
                     backgroundColor={colors.btnBgColor_secondary}
                     action={() => {
-                     // handleSubmit();
+                      // handleSubmit();
                       userSignIn({
                         username2: handleChangeSpace(values.email),
                         password2: handleChangeSpace(values.password),

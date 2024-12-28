@@ -1,10 +1,11 @@
 const AWS = require('aws-sdk');
 const cognito = new AWS.CognitoIdentityServiceProvider();
-
+const sns = new AWS.SNS({ region: 'us-east-2' }); // Replace 'your-region' with your AWS region
 const ses = new AWS.SES({ region: 'us-east-2' }); // Ensure this region matches your SES setup
 const { default: fetch, Request } = require('node-fetch');
 const nodemailer = require('nodemailer');
 const sesTransport = require('nodemailer-ses-transport');
+
 function generateRandomPassword(length) {
   const charset =
     'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -50,7 +51,29 @@ async function sendEmail(email, username, password) {
     console.error('Error sending email:', error);
   }
 }
+async function sendTextMessage(phoneNumber, username, password) {
+  const message = `Hello,
+Your account has been created successfully. Here are your login credentials:
+  Username: ${username}
+  Password: ${password} 
+  Please use these credentials to log in to your account.
+  Best regards,
+  Biologic App`;
 
+  const params = {
+    Message: message, // The message to send
+    PhoneNumber: phoneNumber, // Pass phone number directly as a string, must include country code, e.g., +1234567890
+  };
+
+  console.log('Sending SMS with parameters:', params);
+
+  try {
+    const result = await sns.publish(params).promise();
+    console.log('SMS sent successfully:', result);
+  } catch (error) {
+    console.error('Error sending SMS:', error);
+  }
+}
 exports.handler = async (event) => {
   console.log('Received event:', JSON.stringify(event, null, 2));
   let response;
@@ -67,6 +90,7 @@ exports.handler = async (event) => {
 
     const name = newImage.name ? newImage.name.S : null;
     const email = newImage.email ? newImage.email.S : null;
+    const phoneNumber = newImage.phoneNumber ? newImage.phoneNumber.S : null;
 
     const tableID = newImage.id ? newImage.id.S : null;
 
@@ -120,7 +144,18 @@ exports.handler = async (event) => {
       await cognito.adminSetUserPassword(setPasswordParams).promise();
       console.log('email', email);
       // Send email with credentials
-      await sendEmail(email, username, randomPassword);
+      // await sendEmail(email, username, randomPassword);
+      const formatPhoneNumber = (phoneNumber) => {
+        if (!phoneNumber.startsWith("+1")) {
+          return `+1${phoneNumber}`;
+        }
+        return phoneNumber;
+      };
+      
+      // Call sendTextMessage with the formatted phone number
+      const formattedPhoneNumber = formatPhoneNumber(phoneNumber);
+      console.log("formattedPhoneNumber",formattedPhoneNumber);
+      await sendTextMessage(formattedPhoneNumber, username, randomPassword);
 
       response = {
         statusCode: 200,

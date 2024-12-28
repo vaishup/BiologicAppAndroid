@@ -1,0 +1,32 @@
+// colors.ts
+export const colors = {
+  primary: '#037cc0',
+  success: '#28a745',
+  danger: '#dc3545',
+  warning: '#ffc107',
+  info: '#17a2b8',
+  light: '#f8f9fa',
+  dark: '#343a40',
+  daryGray: "#333333",
+  white:'#ffffff',
+  yellow:'#e6bb00',
+  bgColor: '#ffffff',
+  btnBgColor_primary: '#393939',
+  btnBgColor_secondary: '#666666',
+  btnBgColor_selected: '#707070',
+  btnBgColor_danger: '#8E4242',
+  txtColor_bg: '#000000',
+  txtColor_primary: '#ffffff',
+  txtColor_secondary: '#000000',
+  txtColor_danger: '#FF9090',
+  txtColor_disable: '#666666',
+  dividerColor: '#565553',
+  backdropColor: '#898989',
+  actionSheetBgColor: '#1B1B1B',
+  actionSheetHeaderBgColor: '#292929',
+  secondary:'#1B1B1B',
+  profileHeaderBg:'#66ccff',
+  gray:'#d9d9d9',
+  gray2:'#cccccc'
+  // Add more colors as needed
+};

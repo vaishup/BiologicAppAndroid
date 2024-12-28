@@ -1,6 +1,28 @@
-type TheShifts @model @auth(rules: [{allow: public}]) {
+type MainShift @model 
+  @auth(rules: [
+  { allow: public, provider: apiKey, operations: [read, create, update, delete] }
+]) {
   id: ID!
-  Location: String
+  locationID: String
+  shiftName: String
+  duties: String
+  shiftDate: AWSDateTime
+  shiftStartTime: AWSDateTime
+  shiftEndTime: AWSDateTime
+  createdBy: String
+  startDate: String
+  endDate: String
+  shiftstatus: String
+  userId: String
+  staffIds: [String]
+  shifts: [TheShifts] @hasMany(indexName: "byMainShift", fields: ["id"]) # One-to-many relationship
+}
+
+type TheShifts @model 
+  @auth(rules: [
+  { allow: public, provider: apiKey, operations: [read, create, update, delete] }
+]) {
+  id: ID!
   duties: String
   staffId: String
   time: String
@@ -9,29 +31,101 @@ type TheShifts @model @auth(rules: [{allow: public}]) {
   startDate: String
   endDate: String
   shiftstatus: String
-  userId:String
-
+  userId: String
+  checkInTIme: String
+  checkOutTime: String
+  AdminTime: String
+  AssignStatus: String
+  locationID: String
+  amendment:String
+  mainShiftID: ID @index(name: "byMainShift", sortKeyFields: ["startDate"]) # Foreign key to MainShift
+  mainShift: MainShift @belongsTo(fields: ["mainShiftID"]) # Belongs-to relationship
 }
 
-type TheStaff @model @auth(rules: [{allow: public}]) {
+type Location @model 
+  @auth(rules: [
+  { allow: public, provider: apiKey, operations: [read, create, update, delete] } # Allow public access
+]) {
+  id: ID! # Unique identifier for the location
+  name: String! # Name of the location
+  status: String # Status of the location (e.g., Active, Inactive)
+}
+
+
+
+type TheStaff
+  @model
+@auth(
+  rules: [
+    { allow: owner, operations: [read, create, update, delete] },
+    { allow: groups, groups: ["Admin"], operations: [read, create, update, delete] },
+    { allow: public, provider: apiKey, operations: [read, update, create, delete] }
+  ]
+) {
   id: ID!
   name: String
   phoneNumber: String
   email: String
   DOB: String
   photourl: String
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, update,delete] },
+        { allow: groups, groups: ["Admin"], operations: [read, update,delete] },
+              { allow: public, provider: apiKey, operations: [read ,update, create,delete] } # Optional: Public read access
+
+      ]
+    )
   isBiomatritcs: String
   profileStatus: String
-  Location:String
-  IsActive:String
-  shiftIds:[String]
-  userId:String
-  latitude: String 
-  longitude: String
+  Location: String
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, update,delete] },
+        { allow: groups, groups: ["Admin"], operations: [read, update,delete] },
+              { allow: public, provider: apiKey, operations: [read ,update, create,delete] } # Optional: Public read access
 
+      ]
+    )
+  IsActive: String
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, update,delete] },
+        { allow: groups, groups: ["Admin"], operations: [read, update,delete] },
+              { allow: public, provider: apiKey, operations: [read ,update, create,delete] } # Optional: Public read access
+
+      ]
+    )
+  latitude: String
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, update,delete] },
+        { allow: groups, groups: ["Admin"], operations: [read, update,delete] },
+              { allow: public, provider: apiKey, operations: [read ,update, create,delete] } # Optional: Public read access
+
+      ]
+    )
+  longitude: String
+    @auth(
+      rules: [
+        { allow: owner, operations: [read, update,delete] },
+        { allow: groups, groups: ["Admin"], operations: [read, update,delete] },
+              { allow: public, provider: apiKey, operations: [read ,update, create,delete] } # Optional: Public read access
+
+      ]
+    )
+  shiftIds: [String]
+  userId: String
+  employeeId: String
+  staffStatus:String
+  shiftstatus:String
 }
 
-type TheAdminStaffUser @model @auth(rules: [{allow: public}]) {
+
+type TheAdminStaffUser @model 
+ @auth(rules: [
+  { allow: public, provider: apiKey, operations: [read, create, update] } # Allow public read access
+]){
   id: ID!
   name: String
   phoneNumber: String
