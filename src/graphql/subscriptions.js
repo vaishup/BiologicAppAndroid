@@ -260,11 +260,8 @@ export const onDeleteLocation = /* GraphQL */ `
   }
 `;
 export const onCreateTheStaff = /* GraphQL */ `
-  subscription OnCreateTheStaff(
-    $filter: ModelSubscriptionTheStaffFilterInput
-    $owner: String
-  ) {
-    onCreateTheStaff(filter: $filter, owner: $owner) {
+  subscription OnCreateTheStaff($filter: ModelSubscriptionTheStaffFilterInput) {
+    onCreateTheStaff(filter: $filter) {
       id
       name
       phoneNumber
@@ -281,20 +278,16 @@ export const onCreateTheStaff = /* GraphQL */ `
       userId
       employeeId
       staffStatus
-      shiftstatus
+      scanNumber
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
 `;
 export const onUpdateTheStaff = /* GraphQL */ `
-  subscription OnUpdateTheStaff(
-    $filter: ModelSubscriptionTheStaffFilterInput
-    $owner: String
-  ) {
-    onUpdateTheStaff(filter: $filter, owner: $owner) {
+  subscription OnUpdateTheStaff($filter: ModelSubscriptionTheStaffFilterInput) {
+    onUpdateTheStaff(filter: $filter) {
       id
       name
       phoneNumber
@@ -311,20 +304,16 @@ export const onUpdateTheStaff = /* GraphQL */ `
       userId
       employeeId
       staffStatus
-      shiftstatus
+      scanNumber
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
 `;
 export const onDeleteTheStaff = /* GraphQL */ `
-  subscription OnDeleteTheStaff(
-    $filter: ModelSubscriptionTheStaffFilterInput
-    $owner: String
-  ) {
-    onDeleteTheStaff(filter: $filter, owner: $owner) {
+  subscription OnDeleteTheStaff($filter: ModelSubscriptionTheStaffFilterInput) {
+    onDeleteTheStaff(filter: $filter) {
       id
       name
       phoneNumber
@@ -341,10 +330,9 @@ export const onDeleteTheStaff = /* GraphQL */ `
       userId
       employeeId
       staffStatus
-      shiftstatus
+      scanNumber
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
@@ -391,6 +379,60 @@ export const onDeleteTheAdminStaffUser = /* GraphQL */ `
       phoneNumber
       email
       userType
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateTheViewIDUser = /* GraphQL */ `
+  subscription OnCreateTheViewIDUser(
+    $filter: ModelSubscriptionTheViewIDUserFilterInput
+  ) {
+    onCreateTheViewIDUser(filter: $filter) {
+      id
+      name
+      employeeId
+      profileStatus
+      attachment
+      isLogin
+      scanNumber
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateTheViewIDUser = /* GraphQL */ `
+  subscription OnUpdateTheViewIDUser(
+    $filter: ModelSubscriptionTheViewIDUserFilterInput
+  ) {
+    onUpdateTheViewIDUser(filter: $filter) {
+      id
+      name
+      employeeId
+      profileStatus
+      attachment
+      isLogin
+      scanNumber
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteTheViewIDUser = /* GraphQL */ `
+  subscription OnDeleteTheViewIDUser(
+    $filter: ModelSubscriptionTheViewIDUserFilterInput
+  ) {
+    onDeleteTheViewIDUser(filter: $filter) {
+      id
+      name
+      employeeId
+      profileStatus
+      attachment
+      isLogin
+      scanNumber
       createdAt
       updatedAt
       __typename

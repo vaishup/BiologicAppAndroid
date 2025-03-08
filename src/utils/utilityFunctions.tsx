@@ -202,6 +202,7 @@ export const uploadToS3 = async (
         },
       },
     });
+console.log("teasterer00000",`${filePath}/${fileName}`);
 
     return `${filePath}/${fileName}`;
   } catch (Err) {

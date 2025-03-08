@@ -230,10 +230,9 @@ export const getTheStaff = /* GraphQL */ `
       userId
       employeeId
       staffStatus
-      shiftstatus
+      scanNumber
       createdAt
       updatedAt
-      owner
       __typename
     }
   }
@@ -262,10 +261,9 @@ export const listTheStaffs = /* GraphQL */ `
         userId
         employeeId
         staffStatus
-        shiftstatus
+        scanNumber
         createdAt
         updatedAt
-        owner
         __typename
       }
       nextToken
@@ -304,6 +302,46 @@ export const listTheAdminStaffUsers = /* GraphQL */ `
         phoneNumber
         email
         userType
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getTheViewIDUser = /* GraphQL */ `
+  query GetTheViewIDUser($id: ID!) {
+    getTheViewIDUser(id: $id) {
+      id
+      name
+      employeeId
+      profileStatus
+      attachment
+      isLogin
+      scanNumber
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listTheViewIDUsers = /* GraphQL */ `
+  query ListTheViewIDUsers(
+    $filter: ModelTheViewIDUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listTheViewIDUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        name
+        employeeId
+        profileStatus
+        attachment
+        isLogin
+        scanNumber
         createdAt
         updatedAt
         __typename

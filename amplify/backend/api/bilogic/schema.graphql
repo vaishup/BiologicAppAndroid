@@ -55,13 +55,10 @@ type Location @model
 
 type TheStaff
   @model
-@auth(
-  rules: [
-    { allow: owner, operations: [read, create, update, delete] },
-    { allow: groups, groups: ["Admin"], operations: [read, create, update, delete] },
-    { allow: public, provider: apiKey, operations: [read, update, create, delete] }
-  ]
-) {
+  @auth(rules: [
+    { allow: public, provider: apiKey, operations: [read, create, update, delete] }
+  ])
+{
   id: ID!
   name: String
   phoneNumber: String
@@ -70,10 +67,7 @@ type TheStaff
   photourl: String
     @auth(
       rules: [
-        { allow: owner, operations: [read, update,delete] },
-        { allow: groups, groups: ["Admin"], operations: [read, update,delete] },
-              { allow: public, provider: apiKey, operations: [read ,update, create,delete] } # Optional: Public read access
-
+        { allow: public, provider: apiKey, operations: [read, update, create, delete] }
       ]
     )
   isBiomatritcs: String
@@ -81,45 +75,34 @@ type TheStaff
   Location: String
     @auth(
       rules: [
-        { allow: owner, operations: [read, update,delete] },
-        { allow: groups, groups: ["Admin"], operations: [read, update,delete] },
-              { allow: public, provider: apiKey, operations: [read ,update, create,delete] } # Optional: Public read access
-
+        { allow: public, provider: apiKey, operations: [read, update, create, delete] }
       ]
     )
   IsActive: String
     @auth(
       rules: [
-        { allow: owner, operations: [read, update,delete] },
-        { allow: groups, groups: ["Admin"], operations: [read, update,delete] },
-              { allow: public, provider: apiKey, operations: [read ,update, create,delete] } # Optional: Public read access
-
+        { allow: public, provider: apiKey, operations: [read, update, create, delete] }
       ]
     )
   latitude: String
     @auth(
       rules: [
-        { allow: owner, operations: [read, update,delete] },
-        { allow: groups, groups: ["Admin"], operations: [read, update,delete] },
-              { allow: public, provider: apiKey, operations: [read ,update, create,delete] } # Optional: Public read access
-
+        { allow: public, provider: apiKey, operations: [read, update, create, delete] }
       ]
     )
   longitude: String
     @auth(
       rules: [
-        { allow: owner, operations: [read, update,delete] },
-        { allow: groups, groups: ["Admin"], operations: [read, update,delete] },
-              { allow: public, provider: apiKey, operations: [read ,update, create,delete] } # Optional: Public read access
-
+        { allow: public, provider: apiKey, operations: [read, update, create, delete] }
       ]
     )
   shiftIds: [String]
   userId: String
   employeeId: String
-  staffStatus:String
-  shiftstatus:String
+  staffStatus: String
+  scanNumber: String
 }
+
 
 
 type TheAdminStaffUser @model 
@@ -131,4 +114,17 @@ type TheAdminStaffUser @model
   phoneNumber: String
   email: String
   userType:String
+}
+
+type TheViewIDUser @model 
+ @auth(rules: [
+  { allow: public, provider: apiKey, operations: [read, create, update] } # Allow public read access
+]){
+  id: ID!
+  name: String
+  employeeId: String
+  profileStatus: String
+  attachment:String
+  isLogin:String
+  scanNumber:String
 }
