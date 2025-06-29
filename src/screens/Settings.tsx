@@ -116,6 +116,13 @@ const Settings = ({navigation}: {navigation: any}) => {
       showArrow: true,
       action: () => navigation.navigate('ResetPassword'),
     },
+    {
+      icon: 'user',
+      name: 'Logout',
+      path: '',
+      showArrow: true,
+      action: () => handleSignOut(),
+    },
   ].filter(item => item.show !== false); // Filter out items that should not be shown
 
   const SettingsList = () => (

@@ -20,11 +20,8 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>We need your location to provide services at all times.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>We need your location to track your location in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need your location to provide the best service.</string>
+<string>Biologic need to access location to verify shift location when user start shift</string>
+
 </dict>
 </plist>

@@ -157,7 +157,7 @@ const ViewID = ({navigation}: any) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Image
+            {/* <Image
               alt="xwallet"
               source={require('../assets/royal.jpeg')}
               resizeMode="cover"
@@ -166,7 +166,7 @@ const ViewID = ({navigation}: any) => {
                 width: size_sm,
                 overflow: 'hidden',
               }}
-            />
+            /> */}
             {/* <Text
               style={{
                 fontSize: 24,
