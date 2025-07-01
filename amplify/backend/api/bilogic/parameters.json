@@ -7,5 +7,7 @@
       "authbilogicea355cc4",
       "Outputs.UserPoolId"
     ]
-  }
+  },
+  "CreateAPIKey": false,
+  "AuthMode": "AMAZON_COGNITO_USER_POOLS"
 }

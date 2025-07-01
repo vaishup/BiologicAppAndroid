@@ -30,7 +30,6 @@ const {width: screenW, height: screenH} = Dimensions.get('window');
 const width = screenW / screenH > 0.9 ? screenW * 0.6 : screenW;
 const height = screenH;
 import dayjs from 'dayjs';
-import {Client} from 'undici-types';
 import * as mutation from '../graphql/mutations.js';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import {
@@ -43,8 +42,10 @@ const ViewID = ({navigation}: any) => {
   const [name, setName] = useState('');
   const [empID, setEmpID] = useState('');
   const [userID, setUserID] = useState('');
-  const client = generateClient();
-  const [fileUri, setFileUri] = useState<string | null>(null);
+  const client = generateClient({
+    authMode: 'userPool', // Use Cognito User Pools authentication
+  });
+    const [fileUri, setFileUri] = useState<string | null>(null);
 
   const getUser = async () => {
     const userId = await getTableID();
@@ -62,6 +63,8 @@ const ViewID = ({navigation}: any) => {
       const staffData = await client.graphql({
         query: getTheStaff,
         variables: {id: userId},
+        authMode: 'userPool', // Use Cognito User Pools authentication
+
       });
       const staff = staffData.data.getTheStaff;
       setName(staff.name);

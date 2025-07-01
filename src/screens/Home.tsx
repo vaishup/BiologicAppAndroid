@@ -51,9 +51,11 @@ const Home = ({navigation}: any) => {
     const userId = await getTableID();
     try {
       console.log('Fetching staff with ID:', userId); // Debug log
-      const staffData = await API.graphql({
+      const staffData = await client.graphql({
         query: getTheStaff, // Replace with your actual query to get staff by ID
         variables: {id: userId},
+        authMode: 'userPool', // Use Cognito User Pools authentication
+
       });
       const staff = staffData.data.getTheStaff;
       setName(staff.name);
@@ -64,7 +66,10 @@ const Home = ({navigation}: any) => {
     }
   };
 
-  const API = generateClient();
+  const client = generateClient({
+    authMode: 'userPool', // Use Cognito User Pools authentication
+  });
+
   const updateShiftList = (profileStatus, upcoming, previous) => {
     const newShiftList = [
       {
@@ -112,7 +117,7 @@ const Home = ({navigation}: any) => {
   const listStaff = async () => {
     const userId = await getTableID(); // Fetch the user ID
     try {
-      const staffdata = await API.graphql({
+      const staffdata = await client.graphql({
         query: listTheShifts,
         variables: {
           filter: {
@@ -121,10 +126,11 @@ const Home = ({navigation}: any) => {
             },
           },
         },
+        authMode: 'userPool', // Use Cognito User Pools authentication
+
       });
 
       const shiftsList = staffdata.data.listTheShifts.items;
-console.log("shiftsList...",shiftsList);
 
       // Sort the shifts by createdAt date
       const sortedShifts = shiftsList.sort(

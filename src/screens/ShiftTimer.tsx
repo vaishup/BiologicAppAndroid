@@ -43,8 +43,9 @@ import {useIsFocused} from '@react-navigation/native';
 
 const ShiftTimer = ({navigation, route}: any) => {
   const ref = React.useRef(null);
-  const API = generateClient();
-  const [name, setName] = useState('');
+  const client = generateClient({
+    authMode: 'userPool', // Use Cognito User Pools authentication
+  });  const [name, setName] = useState('');
   const [location, setLocation] = useState(null);
   const [address, setAddress] = useState(null);
  const [latitude, setLattitude] = useState(null);
@@ -207,16 +208,21 @@ const ShiftTimer = ({navigation, route}: any) => {
     getUser();
   }, []);
   const {id, startTime, endTime} = route.params;
+
   console.log(id);
+  console.log("startTime",startTime);
+  console.log("endTime",endTime);
   const getUser = async () => {
     const userId = await getTableID();
     console.log(userId);
 
     try {
       console.log('Fetching staff with ID:', userId); // Debug log
-      const staffData = await API.graphql({
+      const staffData = await client.graphql({
         query: getTheStaff, // Replace with your actual query to get staff by ID
         variables: {id: userId},
+        authMode: 'userPool', // Use Cognito User Pools authentication
+
       });
       console.log(staffData);
 
@@ -244,12 +250,14 @@ const ShiftTimer = ({navigation, route}: any) => {
       console.log('Staff Input:', shiftsInput);
       let staffResponse;
       // Update existing staff member
-      staffResponse = await API.graphql({
+      staffResponse = await client.graphql({
         query: mutation.updateTheShifts,
         variables: {
           input: shiftsInput,
 
         },
+        authMode: 'userPool', // Use Cognito User Pools authentication
+
       });
       const staffInput = {
         id: userId,
@@ -263,11 +271,13 @@ const ShiftTimer = ({navigation, route}: any) => {
       console.log('Staff Input:', staffInput);
       let staffResponses;
       // Update existing staff member
-      staffResponses = await API.graphql({
+      staffResponses = await client.graphql({
         query: mutation.updateTheStaff,
         variables: {
           input: staffInput,
         },
+        authMode: 'userPool', // Use Cognito User Pools authentication
+
       });
       // Debug the API response
       const createdItema = staffResponses.data.updateTheStaff;
@@ -284,13 +294,18 @@ const ShiftTimer = ({navigation, route}: any) => {
     }
   };
   const [showModal, setShowModal] = React.useState(false);
-  function calculateTimeLeft() {
+
+  function calculateTimeLeft(endTime) {
     const currentTime = dayjs();
-    const end = dayjs(endTime);
-    const diff = end.diff(currentTime, 'second'); // Calculate time difference in seconds
+  
+    // Parse the "05:00 PM" time and set it to today
+    const todayEndTime = dayjs(endTime, ['hh:mm A']).set('year', currentTime.year()).set('month', currentTime.month()).set('date', currentTime.date());
+  
+    const diff = todayEndTime.diff(currentTime, 'second');
     return diff > 0 ? diff : 0;
   }
-  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft(endTime));
   console.log('timeLeft', timeLeft);
 
   useEffect(() => {

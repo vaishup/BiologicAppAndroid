@@ -5,6 +5,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Root, {AuthProvider} from './src/navigation';
 import {ModalProvider} from './src/components/Modal/GlobalModal';
+import 'aws-amplify/auth/enable-oauth-listener';
 
 
 function App(): React.JSX.Element {

@@ -1,4 +1,4 @@
-import {useState, createContext, useContext, ReactNode} from 'react';
+import {useState,useEffect, createContext, useContext, ReactNode} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -20,6 +20,7 @@ import ResetPassword from '../screens/ResetPassword';
 import Settings from '../screens/Settings';
 import ShiftList from '../screens/ShiftList';
 import ViewID from '../screens/ViewID';
+import 'aws-amplify/auth/enable-oauth-listener';
 
 // import SignUp from '../screens/SignUp';
 // import ForgotPassword from '../screens/ForgotPassword';
@@ -27,6 +28,7 @@ import ViewID from '../screens/ViewID';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
+import { getCurrentUser } from 'aws-amplify/auth'; // ✅ IMPORT THIS
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -43,12 +45,30 @@ const AuthContext = createContext<AuthContextProps>({
   setIsUserAuth: () => {},
 });
 
-const AuthProvider: React.FC<AuthProviderProps> = ({children}) => {
+const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isUserAuth, setIsUserAuth] = useState<boolean>(initialAuthState);
+
+  // ✅ Check user on app start
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const user = await getCurrentUser();
+        console.log('✅ User is authenticated:', user);
+        setIsUserAuth(true);
+      } catch (error) {
+        console.log('❌ No user authenticated', error);
+        setIsUserAuth(false);
+      }
+    };
+
+    checkUser();
+  }, []);
+
   const contextValue: AuthContextProps = {
     isUserAuth,
     setIsUserAuth,
   };
+
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
   );
@@ -61,7 +81,10 @@ const useAuth = (): AuthContextProps => {
   }
   return context;
 };
-export {AuthProvider, useAuth};
+
+export { AuthProvider, useAuth };
+
+
 
 const Root = () => {
   const {isUserAuth} = useAuth();
