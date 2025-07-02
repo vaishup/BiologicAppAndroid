@@ -1,0 +1,97 @@
+diff --git a/node_modules/@react-native/gradle-plugin/.gradle/8.10/executionHistory/executionHistory.bin b/node_modules/@react-native/gradle-plugin/.gradle/8.10/executionHistory/executionHistory.bin
+new file mode 100644
+index 0000000..1fb8b47
+Binary files /dev/null and b/node_modules/@react-native/gradle-plugin/.gradle/8.10/executionHistory/executionHistory.bin differ
+diff --git a/node_modules/@react-native/gradle-plugin/.gradle/8.10/executionHistory/executionHistory.lock b/node_modules/@react-native/gradle-plugin/.gradle/8.10/executionHistory/executionHistory.lock
+new file mode 100644
+index 0000000..b0acdd5
+Binary files /dev/null and b/node_modules/@react-native/gradle-plugin/.gradle/8.10/executionHistory/executionHistory.lock differ
+diff --git a/node_modules/@react-native/gradle-plugin/.gradle/buildOutputCleanup/buildOutputCleanup.lock b/node_modules/@react-native/gradle-plugin/.gradle/buildOutputCleanup/buildOutputCleanup.lock
+new file mode 100644
+index 0000000..079738f
+Binary files /dev/null and b/node_modules/@react-native/gradle-plugin/.gradle/buildOutputCleanup/buildOutputCleanup.lock differ
+diff --git a/node_modules/@react-native/gradle-plugin/.gradle/buildOutputCleanup/cache.properties b/node_modules/@react-native/gradle-plugin/.gradle/buildOutputCleanup/cache.properties
+new file mode 100644
+index 0000000..48d20a8
+--- /dev/null
++++ b/node_modules/@react-native/gradle-plugin/.gradle/buildOutputCleanup/cache.properties
+@@ -0,0 +1,2 @@
++#Tue Jul 01 21:00:42 EDT 2025
++gradle.version=8.10
+diff --git a/node_modules/@react-native/gradle-plugin/.gradle/buildOutputCleanup/outputFiles.bin b/node_modules/@react-native/gradle-plugin/.gradle/buildOutputCleanup/outputFiles.bin
+new file mode 100644
+index 0000000..7902c45
+Binary files /dev/null and b/node_modules/@react-native/gradle-plugin/.gradle/buildOutputCleanup/outputFiles.bin differ
+diff --git a/node_modules/@react-native/gradle-plugin/.gradle/file-system.probe b/node_modules/@react-native/gradle-plugin/.gradle/file-system.probe
+new file mode 100644
+index 0000000..c87d872
+Binary files /dev/null and b/node_modules/@react-native/gradle-plugin/.gradle/file-system.probe differ
+diff --git a/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/kotlin/compileKotlin/cacheable/dirty-sources.txt b/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/kotlin/compileKotlin/cacheable/dirty-sources.txt
+new file mode 100644
+index 0000000..ee423e0
+--- /dev/null
++++ b/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/kotlin/compileKotlin/cacheable/dirty-sources.txt
+@@ -0,0 +1,30 @@
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/utils/PathUtils.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/utils/PropertyUtils.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/model/ModelCodegenConfig.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/utils/ProjectUtils.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/utils/DependencyUtils.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/TaskConfiguration.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/tasks/internal/PrepareGlogTask.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/utils/NdkConfiguratorUtils.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/utils/FileUtils.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/utils/KotlinStdlibCompatUtils.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/tasks/internal/PreparePrefabHeadersTask.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/utils/JdkConfiguratorUtils.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/tasks/GenerateCodegenSchemaTask.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/utils/BackwardCompatUtils.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/utils/TaskUtils.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/utils/JsonUtils.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/tasks/GenerateCodegenArtifactsTask.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/ReactExtension.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/utils/Os.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/tasks/internal/BuildCodegenCLITask.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/tasks/internal/PrepareJSCTask.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/utils/AgpConfiguratorUtils.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/tasks/BundleHermesCTask.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/model/ModelPackageJson.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/internal/PrivateReactExtension.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/tasks/internal/utils/PrefabPreprocessingEntry.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/ReactRootProjectPlugin.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/tasks/internal/PrepareBoostTask.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/model/ModelCodegenConfigAndroid.kt
++/Users/vaishalipanchal/Documents/BiologicAppAndroid/App/Biologic/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/src/main/kotlin/com/facebook/react/ReactPlugin.kt
+\ No newline at end of file
+diff --git a/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/kotlin/compileKotlin/local-state/build-history.bin b/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/kotlin/compileKotlin/local-state/build-history.bin
+new file mode 100644
+index 0000000..72e1e21
+Binary files /dev/null and b/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/kotlin/compileKotlin/local-state/build-history.bin differ
+diff --git a/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/pluginDescriptors/com.facebook.react.properties b/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/pluginDescriptors/com.facebook.react.properties
+new file mode 100644
+index 0000000..f3b415e
+--- /dev/null
++++ b/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/pluginDescriptors/com.facebook.react.properties
+@@ -0,0 +1 @@
++implementation-class=com.facebook.react.ReactPlugin
+diff --git a/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/pluginDescriptors/com.facebook.react.rootproject.properties b/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/pluginDescriptors/com.facebook.react.rootproject.properties
+new file mode 100644
+index 0000000..f82c5ab
+--- /dev/null
++++ b/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/pluginDescriptors/com.facebook.react.rootproject.properties
+@@ -0,0 +1 @@
++implementation-class=com.facebook.react.ReactRootProjectPlugin
+diff --git a/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/resources/main/META-INF/gradle-plugins/com.facebook.react.properties b/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/resources/main/META-INF/gradle-plugins/com.facebook.react.properties
+new file mode 100644
+index 0000000..f3b415e
+--- /dev/null
++++ b/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/resources/main/META-INF/gradle-plugins/com.facebook.react.properties
+@@ -0,0 +1 @@
++implementation-class=com.facebook.react.ReactPlugin
+diff --git a/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/resources/main/META-INF/gradle-plugins/com.facebook.react.rootproject.properties b/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/resources/main/META-INF/gradle-plugins/com.facebook.react.rootproject.properties
+new file mode 100644
+index 0000000..f82c5ab
+--- /dev/null
++++ b/node_modules/@react-native/gradle-plugin/react-native-gradle-plugin/build/resources/main/META-INF/gradle-plugins/com.facebook.react.rootproject.properties
+@@ -0,0 +1 @@
++implementation-class=com.facebook.react.ReactRootProjectPlugin

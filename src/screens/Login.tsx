@@ -40,8 +40,8 @@ const {width, height} = Dimensions.get('window');
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
-  const [usernameInput, setUserName] = useState('tesb0');
-  const [passwordInput, setPassword] = useState('kg70gueXjG');
+  const [usernameInput, setUserName] = useState('');
+  const [passwordInput, setPassword] = useState('');
 
   const [isError, setIsError] = useState(false);
   const [errMsg, setErrMsg] = useState('');
@@ -71,12 +71,17 @@ const Login = () => {
   //------------------AWS auth amplify userSignIn functions-------------------------
   async function userSignIn({ username2, password2 }) {
     try {
+      console.log('⚙️ Signing in...');
+
       // Sign in the user
       const { isSignedIn } = await signIn({
         username: username2,
         password: password2,
+        options: { authFlowType: "USER_PASSWORD_AUTH" },
+
       });
-  
+      console.log('✅ Signed in?', isSignedIn); // This should print
+
       if (isSignedIn) {
         try {
           // Fetch the user ID (Replace `getTableID` with your actual function to fetch user ID)
@@ -166,8 +171,8 @@ const Login = () => {
           />
           <Formik
             initialValues={{
-              email: 'tesb0',
-              password: 'kg70gueXjG',
+              email: '',
+              password: '',
             }}
             validationSchema={schema}
             onSubmit={values => {

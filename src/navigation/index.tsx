@@ -90,8 +90,6 @@ const Root = () => {
   const {isUserAuth} = useAuth();
   const {isModalVisible} = useModal();
 
-
-  
   return (
     <NavigationContainer>
       <KeyboardAwareScrollView
