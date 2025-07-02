@@ -41,7 +41,9 @@ const ViewProfile = () => {
   const [phone, setPhoneNo] = useState();
   const [dob, setDob] = useState();
   const [profileStatus, setProfileStatus] = useState();
-  const API = generateClient();
+  const client = generateClient({
+    authMode: 'userPool', // Use Cognito User Pools authentication
+  });
   const [fileUri, setFileUri] = useState<string | null>(null);
 
   useFocusEffect(
@@ -55,9 +57,11 @@ const ViewProfile = () => {
 
     try {
       console.log('Fetching staff with ID:', userId); // Debug log
-      const staffData = await API.graphql({
+      const staffData = await client.graphql({
         query: getTheStaff, // Replace with your actual query to get staff by ID
         variables: {id: userId},
+        authMode: 'userPool', // Use Cognito User Pools authentication
+
 
       });
       console.log(staffData);
@@ -121,8 +125,8 @@ const ViewProfile = () => {
           <Text style={styles.profileName}>{name}</Text>
           {/* <Text style={styles.profileTitle}>Senior Graphic Designer</Text> */}
 
-          {(profileStatus?.toLowerCase() === 'pending' ||
-            profileStatus?.toLowerCase() === 'incomplete') && (
+          {/* {(profileStatus?.toLowerCase() === 'pending' ||
+            profileStatus?.toLowerCase() === 'incomplete') && ( */}
             <Pencil
               onPress={() => {
                 navigation.navigate('EditProfile', {
@@ -139,7 +143,7 @@ const ViewProfile = () => {
                 right: 23,
               }}
             />
-          )}
+          {/* )} */}
         </VStack>
 
         {/* Social Media Links Section */}

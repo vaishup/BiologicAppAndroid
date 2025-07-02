@@ -103,14 +103,19 @@ const EditProfile = ({route}) => {
       }
     }
   `;
-  const client = generateClient();
-
+  const client = generateClient({
+    authMode: 'userPool', // Use Cognito User Pools authentication
+  });
   async function handleProfile() {
     if (isLoading) return;
 
     console.log(name, email, phone, dob);
 
     try {
+      if (!validateEmail(userEmail)) {
+        setEmailError('Please enter a valid email address');
+        return;
+      }
       setIsLoading(true);
       setErrMsg('');
       const userId = await getTableID();
@@ -135,6 +140,7 @@ const EditProfile = ({route}) => {
         variables: {
           input: staffInput,
         },
+        authMode: 'userPool', // Use Cognito User Pools authentication
       });
       console.log('Staff updated successfully:', updateRecord);
 
@@ -192,6 +198,7 @@ const EditProfile = ({route}) => {
     const day = selectedDate.getDate().toString().padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
+  const [emailError, setEmailError] = useState('');
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -200,7 +207,10 @@ const EditProfile = ({route}) => {
     setDate(currentDate);
     setUserDob(formatDate(currentDate)); // Format and display the selected date
   };
-
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: colors.bgColor}}>
       <ScrollView
@@ -211,13 +221,10 @@ const EditProfile = ({route}) => {
           padding: 20,
           minHeight: height * 0.9,
         }}>
-                      <Header title="Edit Profile" isBack={false} />
+        <Header title="Edit Profile" isBack={false} />
 
         <VStack space="2xl">
-          <VStack space="sm" alignItems="center">
-       
-            
-          </VStack>
+          <VStack space="sm" alignItems="center"></VStack>
 
           <VStack space="xl" marginTop={30}>
             <CustomTextField
@@ -226,16 +233,23 @@ const EditProfile = ({route}) => {
               backgroundColor={colors.gray}
               borderColor={colors.txtColor_bg}
               autoCapitalize="words"
-
               onChangeText={text => setUserName(text)}
             />
             <CustomTextField
               placeholder="Email"
               value={userEmail}
+              keyboardType='email-address'
+              maxLength={40}
               backgroundColor={colors.gray}
               borderColor={colors.txtColor_bg}
-              onChangeText={text => setUserEmail(text.trim().toLowerCase())}
+              onChangeText={text => {
+                const email = text.trim().toLowerCase();
+                setUserEmail(email);
+              }}
             />
+            {emailError ? (
+              <Text style={{color: 'red', marginTop: 4}}>{emailError}</Text>
+            ) : null}
             <CustomTextField
               placeholder="PhoneNo"
               value={userPhone}
@@ -244,7 +258,7 @@ const EditProfile = ({route}) => {
               onChangeText={text => setUserPhone(text.trim().toLowerCase())}
             />
 
-<View>
+            <View>
               {/* CustomTextField with TouchableOpacity to trigger the DatePicker */}
               <TouchableOpacity
                 onPress={() =>
@@ -271,15 +285,17 @@ const EditProfile = ({route}) => {
               </TouchableOpacity>
 
               <DatePicker
-  modal
-  maximumDate={new Date()} // Correct: User can't select future dates
-  open={datePicker.isOpen}
-  date={datePicker.date}
-  onConfirm={newDate => handleDateConfirm(newDate)} // Confirm the selected date
-  onCancel={() => setDatePicker(prev => ({ ...prev, isOpen: false }))} // Close the picker
-  mode="date"
-  timeZoneOffsetInMinutes={0}
-/>
+                modal
+                maximumDate={new Date()} // Correct: User can't select future dates
+                open={datePicker.isOpen}
+                date={datePicker.date}
+                onConfirm={newDate => handleDateConfirm(newDate)} // Confirm the selected date
+                onCancel={() =>
+                  setDatePicker(prev => ({...prev, isOpen: false}))
+                } // Close the picker
+                mode="date"
+                timeZoneOffsetInMinutes={0}
+              />
             </View>
           </VStack>
         </VStack>

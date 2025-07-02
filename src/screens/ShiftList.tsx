@@ -53,20 +53,13 @@ const ShiftList = ({ navigation }: any) => {
   const [endTime, setEndTime] = useState("");
 
   const { setIsUserAuth } = useAuth();
-  //   async function handleSignOut() {
-  //     try {
-  //       await signOut();
-  //       setIsUserAuth(false);
-  //     } catch (error) {
-  //       console.log('Error signing out: ', error);
-  //     }
-  //   }
+
   const [isLoading, setIsLoading] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [shiftList, setShiftList] = useState([]);
-  const [shiftStartTime, setShiftStartTime] = useState("");
+  const [shiftStartTime, setShiftStartTime] = useState();
   const [shiftEndTime, setShiftEndTime] = useState("");
   const [shiftId, setShiftId] = useState("");
   const [location, setLocation] = useState(null);
@@ -75,8 +68,9 @@ const ShiftList = ({ navigation }: any) => {
 
   const [permissionGranted, setPermissionGranted] = useState(false);
   const [address, setAddress] = useState(null);
-  const client = generateClient();
-  const [activeTab, setActiveTab] = useState("upcoming"); // Tab state
+  const client = generateClient({
+    authMode: 'userPool', // Use Cognito User Pools authentication
+  });  const [activeTab, setActiveTab] = useState("upcoming"); // Tab state
   const [showModal, setShowModal] = useState(false); // Modal visibility state
 
   const handleTabChange = (tab) => {
@@ -84,7 +78,6 @@ const ShiftList = ({ navigation }: any) => {
   };
 
   // Filter shifts based on active tab
-  console.log("shiftList", shiftList);
   dayjs.extend(customParseFormat);
 
   const filteredShifts = shiftList.filter((shift) => {
@@ -93,19 +86,15 @@ const ShiftList = ({ navigation }: any) => {
     const currentDayjs = dayjs(currentTime, "YYYY-MM-DD hh:mm A");
         const shiftDayjs = dayjs(shift.startDate, "YYYY-MM-DD hh:mm A");
 
-     
-
     // Compare based on activeTab
     if (activeTab === "upcoming") {
       return shiftDayjs.isAfter(currentDayjs); // Upcoming shifts
     }
     return shiftDayjs.isBefore(currentDayjs); // Previous shifts
   });
-  console.log("filteredShifts", filteredShifts);
 
   const handleStart = async () => {
     const userId = await getTableID();
-    console.log(userId);
 
     try {
       // Step 2: Create the input object for staff creation or update
@@ -117,7 +106,6 @@ const ShiftList = ({ navigation }: any) => {
         longitude: longitude,
         // Add other fields as needed
       };
-      console.log("Staff Input:", staffInput);
       let staffResponse;
       // Update existing staff member
       staffResponse = await client.graphql({
@@ -125,10 +113,11 @@ const ShiftList = ({ navigation }: any) => {
         variables: {
           input: staffInput,
         },
+        authMode: 'userPool', // Use Cognito User Pools authentication
+
       });
 
       // Debug the API response
-      console.log("Staff Response:", staffResponse);
 
       // Step 3: Handle the response and navigation
       const createdItem = staffResponse.data.updateTheStaff;
@@ -139,7 +128,6 @@ const ShiftList = ({ navigation }: any) => {
 
         // Add other fields as needed
       };
-      console.log("Staff Input:", shiftsInput);
       let shiftResponce;
       // Update existing staff member
       shiftResponce = await client.graphql({
@@ -147,8 +135,13 @@ const ShiftList = ({ navigation }: any) => {
         variables: {
           input: shiftsInput,
         },
+        authMode: 'userPool', // Use Cognito User Pools authentication
+
       });
       setShowModal(false);
+console.log("shiftStartTime ----",shiftStartTime);
+console.log("shiftEndTime",shiftEndTime);
+
       navigation.navigate("ShiftTimer", {
         id: shiftId,
         startTime: shiftStartTime,
@@ -229,13 +222,13 @@ const ShiftList = ({ navigation }: any) => {
     }
   };
   useEffect(() => {
-    listStaff();
+    fetchTheShifts();
     requestLocationPermission();
     requestLocationPermissionIOS();
     getUser();
   }, []);
 
-  const listStaff = async () => {
+  const fetchTheShifts = async () => {
     const userId = await getTableID();
     try {
       const staffdata = await client.graphql({
@@ -247,6 +240,8 @@ const ShiftList = ({ navigation }: any) => {
             },
           },
         },
+        authMode: 'userPool', // Use Cognito User Pools authentication
+
       });
 
       const shiftsList = staffdata.data.listTheShifts.items;
@@ -257,7 +252,9 @@ const ShiftList = ({ navigation }: any) => {
           try {
             const locationData = await client.graphql({
               query: getLocation,
-              variables: { id: shift.locationID }, // Fetch location using locationId
+              variables: { id: shift.locationID },
+              authMode: 'userPool', // Use Cognito User Pools authentication
+              // Fetch location using locationId
             });
 
             const locationName = locationData.data.getLocation.name; // Extract location name
@@ -282,10 +279,8 @@ const ShiftList = ({ navigation }: any) => {
       const sortedTasks = shiftsWithLocation.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
-      console.log("sortedTasks", sortedTasks);
 
       setShiftList(sortedTasks); // Update the state with the shifts
-      console.log("Updated shifts with location names:", shiftsWithLocation);
     } catch (error) {
       console.error("Error fetching shifts or staff details:", error);
     }
@@ -300,29 +295,28 @@ const ShiftList = ({ navigation }: any) => {
 
       for (let i = 0; i < shiftList.length; i++) {
         const shift = shiftList[i];
-        console.log("Start Date:", shift.startDate);
-
+       
         // Parse the shift's start time and format it to the same format
         const shiftStartTime = dayjs(shift.startDate);
-        console.log("shiftStartTime", shift.startDate);
-        console.log("formattedCurrentTime", formattedCurrentTime);
-
-        // console.log('Formatted Shift Start Time:', shiftStartTime);
+     
         const currentDayjs = dayjs(formattedCurrentTime, "YYYY-MM-DD hh:mm A");
         const shiftDayjs = dayjs(shift.startDate, "YYYY-MM-DD hh:mm A");
 
         // Compare the current time with the shift start time (comparing only up to the minute)
-        console.log("currentDayjs", currentDayjs);
-        console.log("wws", shiftDayjs);
-        if (currentDayjs.isSame(shiftDayjs)) {
-          console.log("nkn");
-          console.log(formattedCurrentTime);
-          console.log(shift.startDat);
+        if (currentDayjs.isSame(shiftDayjs) && shift?.shiftstatus !== 'Start') {
+          console.log("nkn",shiftDayjs);
+
+          console.log("formattedCurrentTime",formattedCurrentTime);
+          const currentDayjs = dayjs(formattedCurrentTime, "YYYY-MM-DD hh:mm A");
+        const endtime =  dayjs(shift.endDate, "YYYY-MM-DD hh:mm A");
+          console.log("currentDayjs",currentDayjs);
+          console.log("startDate",shift.startDate);
+          console.log("endtime",shift.endDate);
 
           // console.log('Shift matches current time!');
           setLocation(shift.locationName); // Set the shift location for modal
-          setShiftStartTime(shiftStartTime); // Set start time for ShiftTimer
-          setShiftEndTime(dayjs(shift.endTime).format("YYYY-MM-DDTHH:mm:ss")); // Set end time for ShiftTimer
+          setShiftStartTime(currentDayjs); // Set start time for ShiftTimer
+          setShiftEndTime(shift.endDate); // Set end time for ShiftTimer
           setShiftId(shift.id);
           setShowModal(true); // Show the modal
           break;
@@ -396,19 +390,17 @@ const ShiftList = ({ navigation }: any) => {
 
   const getUser = async () => {
     const userId = await getTableID();
-    console.log(userId);
 
     try {
-      console.log("Fetching staff with ID:", userId); // Debug log
       const staffData = await client.graphql({
         query: getTheStaff, // Replace with your actual query to get staff by ID
         variables: { id: userId },
+        authMode: 'userPool', // Use Cognito User Pools authentication
+
       });
-      // console.log(staffData);
       const staff = staffData.data.getTheStaff;
       setName(staff.name);
 
-      console.log("staff...s", staff.id);
     } catch (error) {
       console.error("Error fetching staff data:", error);
     }
@@ -482,7 +474,7 @@ const ShiftList = ({ navigation }: any) => {
               <Text style={styles.itemTitle}>{item?.locationName}</Text>
 
               <Text style={styles.itemTime}>
-                Time: {item.startDate} - {item.endTime}
+                Time: {item.startDate} - {item.endDate} 
               </Text>
 
               <Text style={styles.itemDescription}>{item.duties}</Text>

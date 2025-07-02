@@ -1,6 +1,6 @@
 type MainShift @model 
   @auth(rules: [
-  { allow: public, provider: apiKey, operations: [read, create, update, delete] }
+  { allow: private,  provider: userPools, operations: [read, create, update, delete] }
 ]) {
   id: ID!
   locationID: String
@@ -20,7 +20,7 @@ type MainShift @model
 
 type TheShifts @model 
   @auth(rules: [
-  { allow: public, provider: apiKey, operations: [read, create, update, delete] }
+  { allow: private,  provider: userPools, operations: [read, create, update, delete] }
 ]) {
   id: ID!
   duties: String
@@ -44,7 +44,7 @@ type TheShifts @model
 
 type Location @model 
   @auth(rules: [
-  { allow: public, provider: apiKey, operations: [read, create, update, delete] } # Allow public access
+  { allow: private,  provider: userPools, operations: [read, create, update, delete] } # Allow public access
 ]) {
   id: ID! # Unique identifier for the location
   name: String! # Name of the location
@@ -56,7 +56,7 @@ type Location @model
 type TheStaff
   @model
   @auth(rules: [
-    { allow: public, provider: apiKey, operations: [read, create, update, delete] }
+    { allow: private, provider: userPools, operations: [read, create, update, delete] }
   ])
 {
   id: ID!
@@ -65,35 +65,33 @@ type TheStaff
   email: String
   DOB: String
   photourl: String
-    @auth(
-      rules: [
-        { allow: public, provider: apiKey, operations: [read, update, create, delete] }
-      ]
-    )
+    @auth(rules: [
+      { allow: private, provider: userPools, operations: [read, update, create, delete] }
+    ])
   isBiomatritcs: String
   profileStatus: String
   Location: String
     @auth(
       rules: [
-        { allow: public, provider: apiKey, operations: [read, update, create, delete] }
+        { allow: private, provider: userPools, operations: [read, update, create, delete] }
       ]
     )
   IsActive: String
     @auth(
       rules: [
-        { allow: public, provider: apiKey, operations: [read, update, create, delete] }
+        { allow: private, provider: userPools, operations: [read, update, create, delete] }
       ]
     )
   latitude: String
     @auth(
       rules: [
-        { allow: public, provider: apiKey, operations: [read, update, create, delete] }
+        { allow: private, provider: userPools, operations: [read, update, create, delete] }
       ]
     )
   longitude: String
     @auth(
       rules: [
-        { allow: public, provider: apiKey, operations: [read, update, create, delete] }
+        { allow: private, provider: userPools, operations: [read, update, create, delete] }
       ]
     )
   shiftIds: [String]
@@ -104,10 +102,9 @@ type TheStaff
 }
 
 
-
 type TheAdminStaffUser @model 
  @auth(rules: [
-  { allow: public, provider: apiKey, operations: [read, create, update] } # Allow public read access
+  { allow: private,  provider: userPools, operations: [read, create, update] } # Allow public read access
 ]){
   id: ID!
   name: String
@@ -118,7 +115,7 @@ type TheAdminStaffUser @model
 
 type TheViewIDUser @model 
  @auth(rules: [
-  { allow: public, provider: apiKey, operations: [read, create, update] } # Allow public read access
+  { allow: private,  provider: userPools, operations: [read, create, update] } # Allow public read access
 ]){
   id: ID!
   name: String

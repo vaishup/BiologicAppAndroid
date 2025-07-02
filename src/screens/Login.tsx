@@ -47,7 +47,9 @@ const Login = () => {
   const [errMsg, setErrMsg] = useState('');
   const {setIsUserAuth} = useAuth();
   const route = useRoute();
-  const API = generateClient();
+  const client = generateClient({
+    authMode: 'userPool', // Use Cognito User Pools authentication
+  });
 
   //------------------yup validation and password show /hide functions-------------------------
   const schema = Yup.object().shape({
@@ -69,12 +71,17 @@ const Login = () => {
   //------------------AWS auth amplify userSignIn functions-------------------------
   async function userSignIn({ username2, password2 }) {
     try {
+      console.log('⚙️ Signing in...');
+
       // Sign in the user
       const { isSignedIn } = await signIn({
         username: username2,
         password: password2,
+        options: { authFlowType: "USER_PASSWORD_AUTH" },
+
       });
-  
+      console.log('✅ Signed in?', isSignedIn); // This should print
+
       if (isSignedIn) {
         try {
           // Fetch the user ID (Replace `getTableID` with your actual function to fetch user ID)
@@ -82,9 +89,11 @@ const Login = () => {
           console.log('User ID:', userId);
   
           // Fetch the staff profile details using GraphQL
-          const staffData = await API.graphql({
+          const staffData = await client.graphql({
             query: getTheStaff, // Replace with your actual query
             variables: { id: userId },
+            authMode: 'userPool', // Use Cognito User Pools authentication
+
           });
           const staff = staffData.data.getTheStaff;
           // Check the profile status
@@ -125,9 +134,11 @@ const Login = () => {
 
     try {
       console.log('Fetching staff with ID:', userId); // Debug log
-      const staffData = await API.graphql({
+      const staffData = await client.graphql({
         query: getTheStaff, // Replace with your actual query to get staff by ID
         variables: {id: userId},
+        authMode: 'userPool', // Use Cognito User Pools authentication
+
       });
       console.log(staffData);
 

@@ -5,8 +5,9 @@
     "serviceName": "AppSync",
     "defaultAuthType": {
       "mode": "API_KEY",
-      "keyDescription": "api key description",
-      "expirationTime": 30
+      "expirationTime": 30,
+      "apiKeyExpirationDate": "2025-07-31T14:33:40.046Z",
+      "keyDescription": "api key description"
     },
     "additionalAuthTypes": [
       {
@@ -17,10 +18,6 @@
         "cognitoUserPoolId": "authbilogicea355cc4"
       }
     ],
-    "conflictResolution": {
-      "defaultResolutionStrategy": {
-        "type": "NONE"
-      }
-    }
+    "conflictResolution": {}
   }
 }

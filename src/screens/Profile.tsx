@@ -48,8 +48,9 @@ const Profile = () => {
     curr: string | null;
   }>({s3Path: null, prev: null, curr: null});
   const [fileUri, setFileUri] = useState<string | null>(null);
-  const client = generateClient();
-  const [errors, setErrors] = useState({
+  const client = generateClient({
+    authMode: 'userPool', // Use Cognito User Pools authentication
+  });  const [errors, setErrors] = useState({
     name: '',
     email: '',
     phone: '',
@@ -98,6 +99,8 @@ const Profile = () => {
           variables: {
             input: staffInput,
           },
+          authMode: 'userPool', // Use Cognito User Pools authentication
+
         });
         //console.log('Staff updated successfully:', updateRecord);
 

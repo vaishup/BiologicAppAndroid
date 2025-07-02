@@ -77,9 +77,8 @@ const ResetPassword = ({navigation}: {navigation: any}) => {
       behavior="padding"
       keyboardVerticalOffset={1}
       style={{flex: 1}}>
-      <SafeAreaView style={{flex: 0, backgroundColor: '#307CC3'}} />
-      <SafeAreaView style={{flex: 1, backgroundColor: '#f5f5f5'}}>
-        <VStack
+      <SafeAreaView style={{flex: 0}} />
+         <VStack
           style={{
             flex: 1,
             justifyContent: 'space-between',
@@ -194,7 +193,7 @@ const ResetPassword = ({navigation}: {navigation: any}) => {
             )}
           </Formik>
         </VStack>
-      </SafeAreaView>
+  
     </KeyboardAvoidingView>
   );
 };

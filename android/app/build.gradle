@@ -79,8 +79,8 @@ android {
         applicationId "com.BioLogic"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "2"
+        versionCode 6
+        versionName "1.2"
     }
     signingConfigs {
         debug {
@@ -108,7 +108,8 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
     implementation("com.facebook.react:flipper-integration")
-
+implementation 'androidx.core:core-ktx:1.16.0'
+    implementation 'androidx.core:core:1.16.0'
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
